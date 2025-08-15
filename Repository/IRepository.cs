@@ -3,6 +3,6 @@
     public interface IRepository<T>
     {
         public List<T> GetAll();
-        public T GetById(int id);
+        public T GetById(int id,bool getProducts);
     }
 }

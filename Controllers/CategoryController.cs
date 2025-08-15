@@ -7,48 +7,35 @@ namespace E_Commerce.Controllers
     public class CategoryController : Controller
     {
         private readonly IRepository<Category> repository;
+        private readonly IRepository<Product> productRepo;
 
-        public CategoryController(IRepository<Category>repository)
+        public CategoryController(IRepository<Category>repository,IRepository<Product>productRepo)
         {
             this.repository = repository;
+            this.productRepo = productRepo;
         }
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult ShowCategory(int id)
+        public IActionResult ShowCategory(int id,string input=null)
         {
-            Category category = repository.GetById(id);
-                //new Category
-            //{
+            Category category;
+            if (input is not null)
+            {
+                 category = repository.GetById(id,getProducts:false);
+                var Repo = productRepo as ProductRepo;
+                category.Products = Repo.SearchProduct(input);
+            }
+            else
+            {
+                category = repository.GetById(id, getProducts: true);
 
-            //    Id = 1,
-            //    Name="Food",
-            //    Description="Food for Human per individual",
-            //    Products=new List<Product> { 
-            //        new Product{Id=1,Name="Pepsi",Description="FOOD",Images=new List<Image>{
-            //            new Image{Url="Pepsi/1.webp" },
-            //            new Image{Url="Pepsi/2.webp" },
-            //            new Image{Url="Pepsi/3.webp" }
-                    
-            //        } },
-            //        new Product{Id=2,Name="Chips",Description="FOOD",Images=new List<Image>{
-            //            new Image{Url="Chepsi/1.jpg"},
-            //            new Image{Url="Chepsi/2.jpg"},
-            //            new Image{Url="Chepsi/3.jpg"}
-                    
-            //        }},
-            //        new Product{Id=3,Name="Bescu",Description="FOOD",Images=new List<Image>{
-            //            new Image{Url="Bescuit/1.jpg"},
-            //            new Image{Url="Bescuit/2.jpg"},
-            //            new Image{Url="Bescuit/3.jpg"}
-                    
-            //        }},
-            //    }
+            }
+            ViewBag.searchValue = input;
 
-            //};
-            
             return View(category);
         }
+     
     }
 }

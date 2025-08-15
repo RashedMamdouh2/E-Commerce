@@ -1,0 +1,179 @@
+﻿@model Product
+
+
+<!-- Page Title -->
+<div class="page-title accent-background">
+    <div class="container position-relative">
+        <h1>@Model.Name</h1>
+        <p>@Model.Description</p>
+        <nav class="breadcrumbs">
+            <ol>
+                <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li class="current">@Model.Name</li>
+            </ol>
+        </nav>
+    </div>
+</div><!-- End Page Title -->
+<!-- Portfolio Details Section -->
+<section id="portfolio-details" class="portfolio-details section">
+
+    <div class="container" data-aos="fade-up">
+
+        <div class="portfolio-details-slider swiper init-swiper">
+            <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "speed": 600,
+                  "autoplay": {
+                    "delay": 5000
+                  },
+                  "slidesPerView": "auto",
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
+                  },
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "type": "bullets",
+                    "clickable": true
+                  }
+                }
+            </script>
+            <div class="swiper-wrapper align-items-center">
+
+                @foreach (var img in Model.Images)
+                {
+                    <div class="swiper-slide">
+                        <img src="@img.Url" alt="">
+                    </div>
+                }
+
+
+
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="row justify-content-between gy-4 mt-4">
+
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="portfolio-description">
+                    <h2>@Model.Name's Description</h2>
+                    <p>
+                        @Model.Description
+                    </p>
+                  
+                    <h2 style="margin-top:10%;">Product Reviews</h2>
+                    @foreach(var feedback in Model.Feedbacks){
+
+                    <div style=" margin-bottom:10%;"class="testimonial-item">
+                        <p>
+                            <i class="bi bi-quote quote-icon-left"></i>
+                            <span>@feedback.Comment</span>
+                            <i class="bi bi-quote quote-icon-right"></i>
+                        </p>
+                        <div>
+                            <img src="~/ProductsImages/Default.jpg" class="testimonial-img" alt="">
+                            <h3>@feedback.Customer?.Name</h3>
+                           
+                        </div>
+                    </div>
+                    }
+
+                
+
+                </div>
+            </div>
+
+            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="portfolio-info">
+                    <h3>Project information</h3>
+                    <ul>
+                        <li><strong>Price</strong> @Model.Price</li>
+                        <li><strong>Category</strong> @Model.Category?.Name</li>
+                        <li><strong>In Stock</strong> @Model.Amount</li>
+                        <li><a href="#" class="btn-visit align-self-start">Add To Cart</a></li>
+                        <li><a href="#" class="btn btn-visit  align-self-start">Buy Now</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</section><!-- /Portfolio Details Section -->
+<section id="contact" class="contact section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>New Review</h2>
+        <p>Share Your Experience!!</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+
+
+            <div class="">
+                @*TODO: add the customer(logged in user id as customerId (forign key required) )
+
+                    Now I hardCoded it with any random value
+                *@
+                <form asp-controller="Product" asp-action="AddProductReview"  method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                    <div class="row gy-4">
+
+
+                        <div class="col-12">
+                            <textarea class="form-control" name="Comment" rows="6" placeholder="Review" required=""></textarea>
+                            <input type="hidden" name="ProductId" value="@Model.Id" />
+                            <input type="hidden" name="CustomerId" value="1" />
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <div class="loading">Loading</div>
+                            <div class="error-message"></div>
+                            <div class="sent-message">Your Review has been sent. Thank you!</div>
+
+                            <button type="submit">Add Review</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div><!-- End Contact Form -->
+
+        </div>
+
+    </div>
+
+</section><!-- /Contact Section -->
+<style>
+    .portfolio-details-slider {
+        max-width: 400px; /* العرض */
+        margin: auto; /* يخليها في النص */
+    }
+
+        .portfolio-details-slider .swiper-slide img {
+            width: 100%; /* خلي الصورة تملأ المساحة */
+            height: auto; /* النسبة محفوظة */
+            border-radius: 10px; /* مظهر أحلى */
+        }
+
+        .portfolio-details-slider .swiper-button-next,
+        .portfolio-details-slider .swiper-button-prev {
+            transform: scale(0.7); /* صغر حجم الأسهم */
+        }
+
+        .portfolio-details-slider .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+        }
+
+  
+
+</style>

@@ -14,6 +14,7 @@ namespace E_Commerce
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Commerce"));
             });
             builder.Services.AddScoped<IRepository<Category>, CategoryRepo>();
+            builder.Services.AddScoped<IRepository<Product>, ProductRepo>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

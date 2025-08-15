@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -42,28 +41,11 @@
 
     <main class="main">
 
-        <!-- Hero Section -->
-        <section id="hero" class="hero section accent-background">
-            <div class="container">
-                <div class="row gy-4">
-                    <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-                        <h1>Bettter Digital Experience With Techie</h1>
-                        <p>We are team of talented designers making websites with Bootstrap</p>
-                        <div class="d-flex">
-                            <a href="#about" class="btn-get-started">Get Started</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 order-1 order-lg-2 hero-img">
-                        <img src="~/assets/img/hero-img.png" class="img-fluid animated" alt="">
-                    </div>
-                </div>
-            </div>
-
-        </section><!-- /Hero Section -->
+       
         @RenderBody()
 
         <!-- About Section -->
-         <section id="about" class="about section">
+        <section id="about" class="about section">
 
             <div class="container">
 
@@ -304,7 +286,7 @@
                     <div class="swiper-wrapper">
 
                         <div class="swiper-slide">
-                            <div class="testimonial-item" "=" ">
+                            <div class="testimonial-item">
                                 <p>
                                     <i class=" bi bi-quote quote-icon-left"></i>
                                     <span>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.</span>
@@ -375,7 +357,6 @@
             </div>
 
         </section><!-- /Testimonials Section -->
-
         <!-- Pricing Section -->
         <section id="pricing" class="pricing section">
 
@@ -699,7 +680,7 @@
 
             </div>
 
-        </section><!-- /Contact Section --> 
+        </section><!-- /Contact Section -->
 
     </main>
 
@@ -789,6 +770,58 @@
 </body>
 
 </html>
+
+
+
+
+@*
+	هيتعرض view ده بيتحط في اي layout في ال 
+	render boyd فهو بيعرض اي حاجة موجودة فوق ال 
+	واي حاجة تحتها لكل الفيوز 
+	الاصلية view مكان الريندر بودي بيعرض بقي ال 
+*@
+@await RenderSectionAsync("Scripts", required: false)
+ <style>
+
+    .search-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 15px auto;
+    }
+
+    .search-input {
+        padding: 10px 15px;
+        border: 2px solid #8e44ad; /* بنفسجي */
+        border-radius: 25px;
+        outline: none;
+        width: 250px;
+        font-size: 14px;
+        background-color: white;
+        color: #333;
+        transition: border-color 0.3s ease;
+    }
+
+        .search-input:focus {
+            border-color: #6c3483; /* بنفسجي غامق */
+        }
+
+    .search-button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #8e44ad; /* بنفسجي */
+        color: white;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .search-button:hover {
+            background-color: #6c3483; /* بنفسجي غامق */
+        }
+
+</style> 
 
 
 

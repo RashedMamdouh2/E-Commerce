@@ -12,6 +12,8 @@ namespace E_Commerce.Models
         public DbSet<Feedback>feedbacks { get; set; }
         public DbSet<Seller> sellers{ get; set; }
         public DbSet<Coupon> coupons{ get; set; }
+        public DbSet<FilterWord> filters{ get; set; }
+
 
         public CommerceDbContext(DbContextOptions options):base(options)
         {
