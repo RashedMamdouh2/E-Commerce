@@ -1,4 +1,5 @@
-﻿ <!-- Hero Section -->
+﻿@model HomeViewModel
+<!-- Hero Section -->
 <section id="hero" class="hero section accent-background">
     <div class="container">
         <div class="row gy-4">
@@ -16,3 +17,146 @@
     </div>
 
 </section><!-- /Hero Section -->
+<section id="services" class="services section">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Categeories</h2>
+        <p> Discover our diverse categories tailored to your lifestyle — whether you’re looking for sports and outdoor equipment, beauty and health essentials, must-read books, fun toys and games, automotive supplies, fresh groceries, or pet accessories, we’ve got you covered.</p>
+    </div><!-- End Section Title -->
+
+    <div class="container">
+
+        <div class="row gy-4">
+            @foreach (var cat in Model.Categories)
+            {
+                <div class="col-xl-4 col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-item d-flex">
+                        <div class="icon flex-shrink-0"><i class="@cat.Images?.FirstOrDefault()?.Url"></i></div>
+                        <div>
+                            <h4 class="title"><a asp-action="ShowCategory" asp-controller="Category" asp-route-id="@cat.Id" class="stretched-link">@cat.Name</a></h4>
+                            <p class="description">@cat.Description</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Service Item -->
+            }
+
+        </div>
+
+    </div>
+
+</section><!-- /Services Section -->
+<!-- Pricing Section -->
+<section id="pricing" class="pricing section">
+
+    <!-- Section Title -->
+    <div class="container section-title text-center" data-aos="fade-up">
+        <h2 class="fw-bold mb-2">New Items</h2>
+        <p class="text-muted">Discover our latest arrivals — handpicked and ready for you!</p>
+    </div>
+    <!-- End Section Title -->
+
+    <div class="container">
+        <div class="row gy-4 justify-content-center">
+
+            @foreach (var product in Model.NewItems)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="pricing-item featured shadow-sm border rounded-4 p-3 text-center h-100">
+
+                        <!-- Product Image -->
+                        <div class="mb-3">
+                            <img src="@(string.IsNullOrEmpty(product.Images?.FirstOrDefault()?.Url)
+                                                                 ? Url.Content("~/ProductsImages/Default.jpg")
+                                                                 : product.Images.First().Url)"
+                             alt="@product.Name"
+                             class="img-fluid rounded-3"
+                             style="max-height: 220px; object-fit: cover;">
+                             
+                        
+                    </div>
+
+                        <!-- Product Name -->
+                        <h3 class="fw-semibold">@product.Name</h3>
+
+                        <!-- Product Price -->
+                        <h4 class=" fw-bold mb-3 ">
+                            <sup>$</sup>@product.Price
+                        </h4>
+
+                        <!-- Action Button -->
+                        <a asp-action="ShowProduct" asp-controller="Product" asp-route-id="@product.Id"
+                           class="btn buy-btn px-4 py-2 rounded-pill">
+                            More Details
+                        </a>
+                    </div>
+                </div>
+                        }
+
+        </div>
+    </div>
+
+</section>
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials section light-background">
+
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Real Stories, Real Satisfaction</h2>
+        <p>We take pride in delivering exceptional service. Here’s what our customers have to say about their experience with us.</p>
+    </div><!-- End Section Title -->
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="swiper init-swiper" data-speed="600" data-delay="5000" data-breakpoints="{ &quot;320&quot;: { &quot;slidesPerView&quot;: 1, &quot;spaceBetween&quot;: 40 }, &quot;1200&quot;: { &quot;slidesPerView&quot;: 3, &quot;spaceBetween&quot;: 40 } }">
+            <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "speed": 600,
+                  "autoplay": {
+                    "delay": 5000
+                  },
+                  "slidesPerView": "auto",
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "type": "bullets",
+                    "clickable": true
+                  },
+                  "breakpoints": {
+                    "320": {
+                      "slidesPerView": 1,
+                      "spaceBetween": 40
+                    },
+                    "1200": {
+                      "slidesPerView": 3,
+                      "spaceBetween": 20
+                    }
+                  }
+                }
+            </script>
+            <div class="swiper-wrapper">
+                @foreach (var message in Model.Messages)
+                {
+
+                    <div class="swiper-slide" style="">
+                        <div class="testimonial-item">
+                            <p style="height:250px;">
+                                <i class=" bi bi-quote quote-icon-left"></i>
+                                <span>@message.Message</span>
+                                <i class="bi bi-quote quote-icon-right"></i>
+                            </p>
+                            <img src="~/ProductsImages/Default.jpg" class="testimonial-img" alt="">
+                            <h3>@message.Name</h3>
+                            <h4>Ms/Mr</h4>
+                        </div>
+                    </div><!-- End testimonial item -->
+                }
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+    </div>
+
+</section><!-- /Testimonials Section -->

@@ -25,7 +25,7 @@
 
             <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
                     <li data-filter="*" class="filter-active">All</li>
-                @foreach (var filter in Model.Filters)
+                @foreach (var filter in Model?.Filters)
                 {
                     <li data-filter=".filter-@filter.Name">@filter.Name</li>
                 }
@@ -35,16 +35,17 @@
                 @foreach(var product in Model.Products)
                 {
                     var filters = string.Join(" ", product.Filters.Select(f => "filter-" + f.Name));
-                    <div class="col-lg-4 col-md-6 portfolio-item isotope-item @filters">
-                        <div class="portfolio-content h-100">
+                    <div class="col-lg-4 col-md-6 portfolio-item isotope-item @filters" style="height:500px;">
+                        <div class="portfolio-content h-100" >
+
                             @if (product.Images.Count == 0)
                             {
-                                <a href="~/ProductsImages/Default.jpg" data-gallery="@product.Name-gallery-app" class="glightbox"><img src="~/ProductsImages/Default.jpg" class="img-fluid" alt=""></a>
+                                <a href="~/ProductsImages/Default.jpg" data-gallery="@product.Name-gallery-app" class="glightbox"><img style="height:300px;" src=" ~ /ProductsImages/Default.jpg" class="img-fluid" alt=""></a>
 
                             }
                             else
                             {
-                                <a href="@product.Images[0].Url" data-gallery="@product.Name-gallery-app" class="glightbox"><img src="@(product.Images[0].Url )" class="img-fluid" alt=""></a>
+                                <a href="@product.Images[0].Url" data-gallery="@product.Name-gallery-app" class="glightbox"><img style="height:300px; width:400px;" src="@(product.Images[0].Url)" class="img-fluid" onerror="this.onerror=null; this.src=' /ProductsImages/Default.jpg';"></a>
                                 
                             }
                             @foreach (var img in product.Images.Count > 1 ? product.Images[1..] : product.Images)
@@ -56,8 +57,9 @@
                                 <h4><a asp-action="ShowProduct" asp-controller="Product" asp-route-id="@product.Id" title="More Details">@product.Name</a> </h4>
 
                                 <p>@product.Description</p>
-                                <br />  
-                                <span class="badge bg-black fs-6 fw-semibold">
+                                <br />
+                                <span class="badge  fs-6 fw-semibold" style="background-color:#7950F2; margin-left:30%;margin-top:5%;">
+                                    @*// *@
                                     @product.Price L.E
                                 </span>
                             </div>
@@ -66,6 +68,21 @@
                 
                     <!-- End Portfolio Item -->
                 }
+                @* @if(this.User.IsInRole("Admin")){//when you add the role and identity do this 
+                    
+                }*@
+                @*add this block to the above condition*@
+                <div class="col-lg-4 col-md-6 portfolio-item isotope-item " style="height:500px;">
+                    <div class="portfolio-content h-100">
+
+                        <a asp-action="AddProduct" asp-controller="Admin" class=""><img style="margin-left:34%;margin-top:50%" src="~/ProductsImages/AddIcon.png" class="img-fluid" alt=""></a>
+
+
+
+
+
+                    </div>
+                </div>
     
             </div><!-- End Portfolio Container -->
 

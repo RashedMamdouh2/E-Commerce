@@ -13,6 +13,8 @@ namespace E_Commerce.Models
         public DbSet<Seller> sellers{ get; set; }
         public DbSet<Coupon> coupons{ get; set; }
         public DbSet<FilterWord> filters{ get; set; }
+        public DbSet<CustomerMessages> messages{ get; set; }
+        public DbSet<FilterWordProduct> filterWordProduct{ get; set; }
 
 
         public CommerceDbContext(DbContextOptions options):base(options)

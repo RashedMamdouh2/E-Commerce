@@ -1,10 +1,14 @@
-﻿namespace E_Commerce.Models
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+
+namespace E_Commerce.Models
 {
     public class Product
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
         public decimal Price { get; set; }
         public int Amount { get; set; }
         public List<ProductCart> Carts { get; set; } = new List<ProductCart>();
@@ -14,6 +18,7 @@
         public List<ProductSeller> Sellers { get; set; }=new List<ProductSeller>();
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public DateTime ?InsertionDate { get; set; }
 
         
     }

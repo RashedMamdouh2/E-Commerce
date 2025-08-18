@@ -1,39 +1,25 @@
-﻿@model List<Category>
-
-<header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-        @* <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center me-auto">
-            <!-- لو حابب تستخدم لوجو صورة -->
-            <!-- <img src="~/assets/img/logo.png" alt=""> -->
-             <h1 class="sitename">Techie</h1> 
-        </a> *@
-
-        <nav id="navmenu" class="navmenu">
-            <ul class="d-flex flex-wrap align-items-center mb-0">
-                @foreach (var category in Model)
-                {
-                    <li class="nav-item">
-                        <a class="nav-link px-3"
-                           asp-action="ShowCategory"
-                           asp-controller="Category"
-                           asp-route-id="@category.Id">
-                           
-                        
-                            @category.Name
-                        </a>
-                    </li>
-                }
-                <li>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7.5a1 1 0 001 1.5h12a1 1 0 001-1.5L17 13M7 13H5.4" />
-                    </svg>
-                </li>
+﻿@model List<CategoryViewModel>
+    <ul>
+@foreach (var cat in Model)
+{
+    @*
+            
+     if(category.SubCat)
+        <li class="dropdown">
+            <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+                <li><a href="#">Deep Dropdown 1</a></li>
+                <li><a href="#">Deep Dropdown 2</a></li>
+                <li><a href="#">Deep Dropdown 3</a></li>
+                <li><a href="#">Deep Dropdown 4</a></li>
+                <li><a href="#">Deep Dropdown 5</a></li>
             </ul>
-            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
-
-        @* <a class="btn-getstarted ms-3" href="#about">Get Started</a> *@
-
-    </div>
-</header>
+        </li>
+        <li><a href="#">Dropdown 2</a></li>
+        <li><a href="#">Dropdown 3</a></li>
+        <li><a href="#">Dropdown 4</a></li>
+        else 
+    *@
+        <li><a asp-action="ShowCategory" asp-controller="Category" asp-route-id="@cat.Id">@cat.Name</a></li>
+}
+    </ul>

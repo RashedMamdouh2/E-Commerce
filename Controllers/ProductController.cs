@@ -1,14 +1,15 @@
 ﻿using E_Commerce.Models;
 using E_Commerce.Repository;
+using E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IRepository<Product> repository;
+        private readonly IRepository<Product,ProductViewModel> repository;
 
-        public ProductController(IRepository<Product>repository)
+        public ProductController(IRepository<Product, ProductViewModel> repository)
         {
             this.repository = repository;
         }

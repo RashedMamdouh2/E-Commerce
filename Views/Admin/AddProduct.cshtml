@@ -1,0 +1,157 @@
+﻿@model E_Commerce.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "AddProduct";
+    SelectList categories = new SelectList(Model.ShowCategoriesList, "Id", "Name");
+}
+
+<h1 class="text-center text-white p-3" style="background-color:rgba(77, 44, 169, 0.9); border-radius:10px;">Add Product</h1>
+
+<hr />
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6 shadow-lg p-4 rounded" style="background-color:#f9f9ff;">
+        <form asp-action="SaveProduct" enctype="multipart/form-data">
+            <div asp-validation-summary="None" class="text-danger mb-3"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label fw-bold" style="color:rgba(77, 44, 169, 0.9);"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Price" class="control-label fw-bold" style="color:rgba(77, 44, 169, 0.9);"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Amount" class="control-label fw-bold" style="color:rgba(77, 44, 169, 0.9);"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="CategoryId" class="control-label fw-bold" style="color:rgba(77, 44, 169, 0.9);"></label>
+                <select asp-for="CategoryId" asp-items="categories" required class="form-select" onchange="GetFilters(this.value)"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div id="filters-container"></div>
+
+            <!-- هنخزن الفلترز المختارة هنا عشان تتبعت مع الفورم -->
+            <input type="hidden" id="SelectedFilters" name="SelectedFilters" />
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label fw-bold" style="color:rgba(77, 44, 169, 0.9);"></label>
+                <input asp-for="Description" class="form-control" required />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Images" class="control-label" style="color:#6f42c1;"></label>
+                <input asp-for="Images" type="file" class="form-control" multiple  id="imageInput" />
+                <div id="previewContainer" class="d-flex flex-wrap mt-2"></div>
+                <span asp-validation-for="Images" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-center mt-4">
+                <input type="submit" value="Add" class="btn text-white px-4 py-2 rounded-pill" style="background-color:rgba(77, 44, 169, 0.9);" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-controller="Home" asp-action="Index" class="text-decoration-none fw-bold" style="color:rgba(77, 44, 169, 0.9);">Back to Home </a>
+</div>
+<script>
+       const imageInput = document.getElementById("imageInput");
+    const previewContainer = document.getElementById("previewContainer");
+    const form = document.querySelector("form");
+
+    let allFiles = []; 
+
+    imageInput.addEventListener("change", function () {
+        for (let file of this.files) {
+            allFiles.push(file);
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const wrapper = document.createElement("div");
+                wrapper.classList.add("position-relative", "m-2");
+                wrapper.style.width = "100px";
+                wrapper.style.height = "100px";
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.classList.add("img-thumbnail");
+                img.style.width = "100%";
+                img.style.height = "100%";
+                img.style.objectFit = "cover";
+
+                const removeBtn = document.createElement("span");
+                removeBtn.innerHTML = "&times;";
+                removeBtn.classList.add("position-absolute", "top-0", "end-0", "bg-danger", "text-white", "rounded-circle", "px-2");
+                removeBtn.style.cursor = "pointer";
+
+                removeBtn.onclick = () => {
+                    wrapper.remove();
+                    allFiles = allFiles.filter(f => f !== file);// نشيل الصورة من الليست كمان
+                };
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+                previewContainer.appendChild(wrapper);
+            };
+            reader.readAsDataURL(file);
+        }
+
+       // نفرغ الـ input عشان يقدر يختار نفس الصورة مرة تانية لو حب
+        this.value = "";
+    });
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        allFiles.forEach(file => formData.append("Images", file));
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.redirectUrl) {
+                // form.submit();
+                // window.location.href = data.redirectUrl;يروح للاكشن اللي راجع من السيرفر
+            }
+        })
+        .catch(err => form.submit());
+    });
+
+        function GetFilters(categoryId) {
+        fetch(`/Category/GetFilters?categoryId=${categoryId}`)
+            .then(res => res.json())
+            .then(filters => {
+                console.log("wslna")
+                let container = document.getElementById("filters-container");
+                container.innerHTML = "";// فضي القديم
+
+                filters.forEach(f => {
+                    let div = document.createElement("div");
+                    div.innerHTML = `
+                        <label>
+                            <input type="checkbox" value="${f.id}"
+                                   onchange="UpdateSelectedFilters()"/> ${f.name}
+                        </label>`;
+                    container.appendChild(div);
+                });
+            });
+    }
+
+    function UpdateSelectedFilters() {
+        let selected = [];
+        document.querySelectorAll("#filters-container input[type=checkbox]:checked")
+            .forEach(cb => selected.push(cb.value));
+
+        //نخزن القيم في الـ hidden input
+        document.getElementById("SelectedFilters").value = selected.join(",");
+    }
+
+</script>
