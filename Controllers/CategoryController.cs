@@ -7,10 +7,10 @@ namespace E_Commerce.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly IRepository<Category,CategoryViewModel> repository;
-        private readonly IRepository<Product,ProductViewModel> productRepo;
+        private readonly ICategoryRepo repository;
+        private readonly IProductRepo productRepo;
 
-        public CategoryController(IRepository<Category, CategoryViewModel> repository,IRepository<Product, ProductViewModel> productRepo)
+        public CategoryController(ICategoryRepo repository,IProductRepo productRepo)
         {
             this.repository = repository;
             this.productRepo = productRepo;

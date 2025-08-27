@@ -4,6 +4,7 @@ using E_Commerce.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(CommerceDbContext))]
-    partial class CommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250819005552_Add login&signup Identity")]
+    partial class AddloginsignupIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,9 +51,6 @@ namespace E_Commerce.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -120,6 +120,8 @@ namespace E_Commerce.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("carts");
                 });
@@ -205,9 +207,6 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -228,11 +227,7 @@ namespace E_Commerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("customers");
                 });
@@ -616,6 +611,17 @@ namespace E_Commerce.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("E_Commerce.Models.Cart", b =>
+                {
+                    b.HasOne("E_Commerce.Models.Customer", "Customer")
+                        .WithMany("Carts")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("E_Commerce.Models.CartCoupon", b =>
                 {
                     b.HasOne("E_Commerce.Models.Cart", "Cart")
@@ -644,19 +650,11 @@ namespace E_Commerce.Migrations
 
             modelBuilder.Entity("E_Commerce.Models.Customer", b =>
                 {
-                    b.HasOne("E_Commerce.Models.Cart", "Cart")
-                        .WithOne("Customer")
-                        .HasForeignKey("E_Commerce.Models.Customer", "CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("E_Commerce.Models.ApplicationUser", "User")
-                        .WithOne("Customer")
-                        .HasForeignKey("E_Commerce.Models.Customer", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cart");
 
                     b.Navigation("User");
                 });
@@ -849,17 +847,9 @@ namespace E_Commerce.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("E_Commerce.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("E_Commerce.Models.Cart", b =>
                 {
                     b.Navigation("Coupons");
-
-                    b.Navigation("Customer")
-                        .IsRequired();
 
                     b.Navigation("Products");
                 });
@@ -873,6 +863,8 @@ namespace E_Commerce.Migrations
 
             modelBuilder.Entity("E_Commerce.Models.Customer", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("Coupons");
 
                     b.Navigation("Feedbacks");

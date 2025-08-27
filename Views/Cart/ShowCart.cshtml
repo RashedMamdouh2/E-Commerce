@@ -1,0 +1,164 @@
+﻿@model E_Commerce.ViewModels.CartViewModel
+
+@{
+    ViewData["Title"] = "ShowCart";
+}
+<div id="login" class="hero section accent-background py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 shadow-lg p-4 rounded bg-white">
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold" style="color:#5846f9;">Shopping Cart</h1>
+                </div>
+
+                @if (Model.Products.Any())
+                {
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="card mb-3 shadow-sm">
+                            <div class="row g-0">
+                                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                                    <img src="@(product.Image)"
+                                         class="img-fluid rounded-start"
+                                         alt="@product.Name"
+                                         style="max-height:150px; object-fit:cover;" />
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">@product.Name</h5>
+                                        <p class="card-text text-muted">@product.Description</p>
+                                        <p class="text-success fw-bold">Price: <span id="price-@product.Id">@product.Price</span> $</p>
+
+                                        <!-- الكمية -->
+                                        <p class="fw-bold text-primary cart-item" data-id="@product.Id">
+                                            Quantity: <span class="qty" id="qty-@product.Id">@product.OrderedQuantity</span>
+                                        </p>
+
+                                        <!-- التوتال -->
+                                        <p class="fw-bold text-primary" >
+                                            Total: <span id="total-@product.Id">@product.Price</span> $
+                                        </p>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="decreaseQty(@product.Id, @product.Price)">
+                                           
+                                            -
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm"  onclick="increaseQty(@product.Id, @product.Price, @product.AvaliableInStock)">
+                                           
+
+
++</button>
+                                         <span class="text-bg-danger" id="warning-@product.Id"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+                else
+                {
+                    <p class="text-center text-muted">Your cart is empty.</p>
+                }
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <h4 class="fw-bold">Total: <span class="text-success" id="TotalInvoice">@Model.TotalPrice $</span></h4>
+                    <div>
+                        <form asp-action="checkout" id="form">
+                            <input hidden id="cartItemsJson" name="cartItemsJson" value="" />
+                        <button type="submit" class="btn btn-primary me-2" onclick="Cashout(@User.Identity.IsAuthenticated.ToString().ToLower())">Proceed To Checkout →</button>
+                        <a asp-action="ApplyCoupon" class="btn btn-outline-secondary">Apply Coupon</a>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="mt-5">
+            <h3 class="fw-bold mb-3">You Might Like:</h3>
+            <div class="row">
+                @foreach (var product in Model.RelatedProducts)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card shadow-sm h-100 border-0">
+                            <img src="@product.Images[0]" class="card-img-top rounded" alt="@product.Name">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@product.Name</h5>
+                                <p class="card-text text-muted">@product.Description</p>
+                                <h6 class="fw-bold text-success">@product.Price $</h6>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+      function increaseQty(productId, price, maxAmount) {
+        let qtyElem = document.getElementById("qty-" + productId);
+        let warningElem = document.getElementById("warning-" + productId);
+        let totalElem = document.getElementById("total-" + productId);
+        let TotalInvoice = document.getElementById("TotalInvoice");
+        let qty = parseInt(qtyElem.innerText);
+        let Total = parseFloat(TotalInvoice.innerText);
+        
+        console.log(Total);
+        if (qty < maxAmount) {
+            warningElem.innerText="";
+            qty++;
+            
+            qtyElem.innerText = qty;
+            totalElem.innerText = (qty * price);
+            TotalInvoice.innerText = (Total+price).toFixed(2);
+
+        } else {
+            warningElem.innerText="Not Enough Quantity Available";
+        }}
+      function decreaseQty(productId, price) {
+        let qtyElem = document.getElementById("qty-" + productId);
+        let warningElem = document.getElementById("warning-" + productId);
+        let totalElem = document.getElementById("total-" + productId);
+        let TotalInvoice = document.getElementById("TotalInvoice");
+
+        let qty = parseInt(qtyElem.innerText);
+        
+        let Total = parseFloat(TotalInvoice.innerText).toFixed(2);
+
+        if (qty > 0) {
+            warningElem.innerText="";
+            qty--;
+            qtyElem.innerText = qty;
+            totalElem.innerText = (qty * price);
+            TotalInvoice.innerText = (Total-price).toFixed(2);
+            
+        } 
+    }
+    function Cashout(isAuthenticated){
+    if(!isAuthenticated){
+
+            document.getElementById("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // ده يمنع الفورم من الـ reload
+        window.location.href = '/Account/Login';
+        console.log("Login First!");
+    });
+
+    }
+    let cartItems = [];
+    document.querySelectorAll(".cart-item").forEach(item => {
+        let productId = item.getAttribute("data-id");
+        let quantity = document.getElementById("qty-" + productId).innerText;
+
+        cartItems.push({
+           Id: parseInt(productId),
+            Amount: parseInt(quantity)
+        });
+    });
+
+    // نحط الـ JSON في الـ hidden input
+    document.getElementById("cartItemsJson").value = JSON.stringify(cartItems);
+    }
+
+</script>

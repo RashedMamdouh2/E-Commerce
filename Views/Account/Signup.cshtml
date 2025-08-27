@@ -1,0 +1,63 @@
+﻿@model SignupViewModel
+
+@{
+    ViewData["Title"] = "Signup";
+}
+
+
+<div id="Signup" class="hero section accent-background py-5" >
+    <div class="container d-flex justify-content-center" style="margin-top:80px;">
+        <div class="col-md-6 shadow-lg p-4 rounded bg-white">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold" style="color:#5846f9;">Signup</h1>
+            </div>
+            <form asp-action="SaveNewSignup" class="d-flex flex-column align-items-center">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Name" class="fw-bold control-label" style="color:#000;"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Phone" class="fw-bold control-label" style="color:#000;"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Email" class="fw-bold control-label" style="color:#000;"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Password" class="fw-bold control-label" style="color:#000;"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="ConfirmPassword" class="fw-bold control-label" style="color:#000;"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center mt-3">
+                    <input type="submit" value="Signup" class="btn btn-primary px-5 mb-3" style="background-color:#5846f9;" />
+
+                    <div>
+                        <span style="color:#000;">Already have an account?</span>
+                        <a asp-action="Login" style="color:cornflowerblue; margin-left:5px;">Login</a>
+                    </div>
+
+                    <div class="mt-2">
+                        <a asp-action="BusinessSignup" style="color:cornflowerblue;">Create Business Account</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div>

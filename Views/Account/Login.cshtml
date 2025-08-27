@@ -1,0 +1,43 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div id="login" class="hero section accent-background py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="col-md-6 shadow-lg p-4 rounded bg-white">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold" style="color:#5846f9;">Login</h1>
+            </div>
+            <form asp-action="CheckLogin" asp-controller="Account" class="d-flex flex-column align-items-center">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Email" class="fw-bold control-label" style="color:#000;">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3 text-start" style="width:100%; max-width:350px;">
+                    <label asp-for="Password" class="fw-bold control-label" style="color:#000;">Password</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check mb-3" style="width:100%; max-width:350px;">
+                    <input class="form-check-input" asp-for="RememberMe" />
+                    <label asp-for="RememberMe" class="form-check-label" style="color:#000;"></label>
+                    <span asp-validation-for="RememberMe" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-center">
+                    <input type="submit" value="Login" class="btn btn-primary px-5" style="background-color:#5846f9;" />
+                    <div class="mt-2">
+                        <a asp-action="Signup" style="color:cornflowerblue;">Create New Account</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

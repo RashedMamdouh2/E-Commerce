@@ -5,9 +5,10 @@
     SelectList categories = new SelectList(Model.ShowCategoriesList, "Id", "Name");
 }
 
-<h1 class="text-center text-white p-3" style="background-color:rgba(77, 44, 169, 0.9); border-radius:10px;">Add Product</h1>
+<h1 class="text-center text-white p-3" style="background-color:rgba(77, 44, 169, 0.9);"><span style="color:rgb(94, 65, 177);">Add New Product</span></h1>
 
-<hr />
+
+
 <div class="row justify-content-center mt-4">
     <div class="col-md-6 shadow-lg p-4 rounded" style="background-color:#f9f9ff;">
         <form asp-action="SaveProduct" enctype="multipart/form-data">

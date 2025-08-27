@@ -1,4 +1,6 @@
-﻿namespace E_Commerce.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace E_Commerce.Models
 {
     public class Customer
     {
@@ -9,8 +11,12 @@
         public string ?Region { get; set; }
         public string ?PostalCode { get; set; }
         public List<Feedback> Feedbacks { get; set; }
-        public List<Cart> Carts { get; set; }
+        [ForeignKey(nameof(Cart))]
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
         public List<Coupon> Coupons { get; set; }
-
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

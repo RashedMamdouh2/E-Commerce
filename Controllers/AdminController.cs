@@ -6,31 +6,35 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
-        private readonly IRepository<Product, ProductViewModel> productRepo;
-        private readonly IRepository<Category, CategoryViewModel> categoryRepo;
+        private readonly IProductRepo productRepo;
+        private readonly ICategoryRepo categoryRepo;
+        private readonly IImageRepo imageRepo;
 
         public AdminController(
-            IRepository<Product,ProductViewModel>productRepo,
-            IRepository<Category, CategoryViewModel> CategoryRepo,
-            IRepository<Image, CategoryViewModel> ImageRepo
+             IProductRepo productRepo,
+            ICategoryRepo CategoryRepo,
+            IImageRepo ImageRepo
             )
         {
             this.productRepo = productRepo;
             categoryRepo = CategoryRepo;
+            imageRepo = ImageRepo;
         }
         public IActionResult Index()
         {
             return View();
         }
+        [HttpGet]
         public IActionResult AddProduct()
         {
             var model = new ProductViewModel { ShowCategoriesList = categoryRepo.GetAll() };
             return View(model);
         }
-        public IActionResult SaveProduct(ProductViewModel model,string SelectedFilters)
+        //[HttpPost]
+        public IActionResult SaveProduct(ProductViewModel model,string SelectedFilters="")
         {
             var imagesList=GetImages(model.Images);
             
@@ -60,6 +64,7 @@ namespace E_Commerce.Controllers
             }
             return View("AddProduct",model);
         }
+        [HttpGet]
 
         public IActionResult ShowAllProducts()
         {
@@ -85,6 +90,7 @@ namespace E_Commerce.Controllers
             viewModel.ShowCategoriesList = categoryRepo.GetAll();
             return View(viewModel);
         }
+        [HttpPost]
         public IActionResult SaveEdit(ProductViewModel model)
         {
             if (ModelState.IsValid)
@@ -106,6 +112,7 @@ namespace E_Commerce.Controllers
 
 
         }
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             if (id > 0)

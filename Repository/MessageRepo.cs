@@ -3,7 +3,7 @@ using E_Commerce.ViewModels;
 
 namespace E_Commerce.Repository
 {
-    public class MessageRepo : IRepository<CustomerMessages, CategoryViewModel>
+    public class MessageRepo : IMessageRepo
     {
         private readonly CommerceDbContext context;
 

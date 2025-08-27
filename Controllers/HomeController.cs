@@ -9,13 +9,13 @@ namespace E_Commerce.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IRepository<Category, CategoryViewModel> categoryRepo;
+        private readonly ICategoryRepo categoryRepo;
 
         //Must be modified the ViewModel for messages 
-        private readonly IRepository<CustomerMessages, CategoryViewModel> messagesRepo;
-        private readonly IRepository<Product, ProductViewModel> productRepo;
+        private readonly IMessageRepo messagesRepo;
+        private readonly IProductRepo productRepo;
 
-        public HomeController(ILogger<HomeController> logger,IRepository<Category,CategoryViewModel>categoryRepo, IRepository<CustomerMessages, CategoryViewModel> messagesRepo, IRepository<Product, ProductViewModel> productRepo)
+        public HomeController(ILogger<HomeController> logger,ICategoryRepo categoryRepo, IMessageRepo messagesRepo, IProductRepo productRepo)
         {
             _logger = logger;
             this.categoryRepo = categoryRepo;

@@ -5,7 +5,7 @@ using NuGet.ProjectModel;
 
 namespace E_Commerce.Repository
 {
-    public class CategoryRepo : IRepository<Category,CategoryViewModel>
+    public class CategoryRepo :ICategoryRepo
     {
         private readonly CommerceDbContext context;
         

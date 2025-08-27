@@ -94,8 +94,8 @@
                         <li><strong>Price</strong> @Model.Price</li>
                         <li><strong>Category</strong> @Model.Category?.Name</li>
                         <li><strong>In Stock</strong> @Model.Amount</li>
-                        <li><a href="#" class="btn-visit align-self-start">Add To Cart</a></li>
-                        <li><a href="#" class="btn btn-visit  align-self-start">Buy Now</a></li>
+                        <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id=@Model.Id class="btn-visit align-self-start">Add To Cart</a></li>
+                        <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id=@Model.Id class="btn btn-visit  align-self-start">Buy Now</a></li>
                     </ul>
                 </div>
             </div>

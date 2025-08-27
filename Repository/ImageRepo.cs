@@ -3,7 +3,7 @@ using E_Commerce.ViewModels;
 
 namespace E_Commerce.Repository
 {
-    public class ImageRepo : IRepository<Image, CategoryViewModel>
+    public class ImageRepo :IImageRepo
     {
         private readonly CommerceDbContext context;
 

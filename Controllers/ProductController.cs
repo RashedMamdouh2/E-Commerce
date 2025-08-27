@@ -7,9 +7,9 @@ namespace E_Commerce.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IRepository<Product,ProductViewModel> repository;
+        private readonly IProductRepo repository;
 
-        public ProductController(IRepository<Product, ProductViewModel> repository)
+        public ProductController(IProductRepo repository)
         {
             this.repository = repository;
         }
@@ -19,7 +19,7 @@ namespace E_Commerce.Controllers
         }
         public IActionResult ShowProduct(int id)
         {
-            var product = repository.GetById(id, false);
+            var product = repository.GetById(id, true);
             return View(product);
         }
         public IActionResult AddProductReview(Feedback feedback)

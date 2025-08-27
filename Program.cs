@@ -11,15 +11,24 @@ namespace E_Commerce
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<CommerceDbContext>();
             builder.Services.AddDbContext<CommerceDbContext>(optionsBuilder =>
             {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Commerce"));
             });
-            builder.Services.AddScoped<IRepository<Category,CategoryViewModel>, CategoryRepo>();
-            builder.Services.AddScoped<IRepository<Image,CategoryViewModel>, ImageRepo>();
-            builder.Services.AddScoped<IRepository<CustomerMessages,CategoryViewModel>, MessageRepo>();
-            builder.Services.AddScoped<IRepository<Product, ProductViewModel>, ProductRepo>();
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<CommerceDbContext>();
+            
+            
+            
+            
+            
+
+            builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
+            builder.Services.AddScoped<IProductRepo, ProductRepo>();
+            builder.Services.AddScoped<ICartRepo, CartRepository>();
+            builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+            builder.Services.AddScoped<IImageRepo, ImageRepo>();
+            builder.Services.AddScoped<IMessageRepo, MessageRepo>();
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -38,8 +47,8 @@ namespace E_Commerce
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseAuthentication();//chekc have cookie?
+            app.UseAuthorization();//check role access
 
             app.MapControllerRoute(
                 name: "default",

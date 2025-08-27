@@ -68,22 +68,23 @@
                 
                     <!-- End Portfolio Item -->
                 }
-                @* @if(this.User.IsInRole("Admin")){//when you add the role and identity do this 
-                    
-                }*@
-                @*add this block to the above condition*@
-                <div class="col-lg-4 col-md-6 portfolio-item isotope-item " style="height:500px;">
-                    <div class="portfolio-content h-100">
-
-                        <a asp-action="AddProduct" asp-controller="Admin" class=""><img style="margin-left:34%;margin-top:50%" src="~/ProductsImages/AddIcon.png" class="img-fluid" alt=""></a>
+                @if (this.User.IsInRole("Admin"))
+                {//when you add the role and identity do this 
 
 
+                    @*add this block to the above condition*@
+                    <div class="col-lg-4 col-md-6 portfolio-item isotope-item " style="height:500px;">
+                        <div class="portfolio-content h-100">
+
+                            <a asp-action="AddProduct" asp-controller="Admin" class=""><img style="margin-left:34%;margin-top:50%" src="~/ProductsImages/AddIcon.png" class="img-fluid" alt=""></a>
 
 
 
+
+
+                        </div>
                     </div>
-                </div>
-    
+                }
             </div><!-- End Portfolio Container -->
 
         </div>

@@ -7,9 +7,9 @@ namespace E_Commerce.ViewComponents
 {
     public class CategoriesViewComponent:ViewComponent
     {
-        private readonly IRepository<Category,CategoryViewModel> repository;
+        private readonly ICategoryRepo repository;
 
-        public CategoriesViewComponent(IRepository<Category, CategoryViewModel> repository)
+        public CategoriesViewComponent(ICategoryRepo repository)
         {
             this.repository = repository;
         }

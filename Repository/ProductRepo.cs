@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Repository
 {
-    public class ProductRepo:IRepository<Product,ProductViewModel>
+    public class ProductRepo:IProductRepo
     {
         private readonly CommerceDbContext context;
 
@@ -34,7 +34,7 @@ namespace E_Commerce.Repository
         public List<Product> SearchProduct(string input)
         {
 
-            return context.products.Where(p=>p.Description.Contains(input)).Include(p => p.Images).Include(p => p.Filters).AsSplitQuery().ToList();
+            return context.products.Where(p=>p.Description.Contains(input)|| p.Name.Contains(input)).Include(p => p.Images).Include(p => p.Filters).AsSplitQuery().ToList();
         }
         public Product GetById(int id, bool getProducts = true)
         {
@@ -42,6 +42,13 @@ namespace E_Commerce.Repository
                 return context.products.Where(p => p.Id == id).Include(p => p.Images).Include(p => p.Feedbacks).ThenInclude(feedback => feedback.Customer).Include(p => p.Filters).Include(p => p.Category).AsSplitQuery().FirstOrDefault();
             }
             return context.products.Find(id);
+        }
+        public List<Product> GetById(List<int> Ids, bool getProducts = true)
+        {
+            if(getProducts){
+                return context.products.Where(p => Ids.Contains(p.Id)).Include(p => p.Images).Include(p => p.Feedbacks).ThenInclude(feedback => feedback.Customer).Include(p => p.Filters).Include(p => p.Category).AsSplitQuery().ToList();
+            }
+            return context.products.Include(p=>p.Images).Where(p => Ids.Contains(p.Id)).ToList();
         }
         public void AddFeedback(Feedback feedback)
         {
