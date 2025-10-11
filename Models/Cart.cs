@@ -1,15 +1,16 @@
 ﻿namespace E_Commerce.Models
 {
-    public class Cart
+    public class Cart:IEntity<int>
     {
+        
         public int Id { get; set; }
         public int Quantity {  get; set; }
-        public int CustomerId {  get; set; }
+        public string CustomerId {  get; set; }
         public Customer Customer { get; set; }
 
 
-        public List<CartCoupon> Coupons { get; set; }
-        public List<ProductCart> Products { get; set; }
+        public List<Coupon> Coupons { get; set; } = new();
+        public List<Product> Products { get; set; } = new();
         
 
     }

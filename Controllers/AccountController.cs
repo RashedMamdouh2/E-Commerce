@@ -8,17 +8,17 @@ namespace E_Commerce.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<Customer> userManager;
+        private readonly SignInManager<Customer> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ICustomerRepo customerManager;
+        private readonly IGeneralRepo<Cart, int> cartReop;
 
-        public AccountController(UserManager<ApplicationUser>userManager,SignInManager<ApplicationUser>signInManager, RoleManager<IdentityRole> roleManager,ICustomerRepo customerManager)
+        public AccountController(UserManager<Customer>userManager,SignInManager<Customer>signInManager, RoleManager<IdentityRole> roleManager,IGeneralRepo<Cart,int>cartReop)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
-            this.customerManager = customerManager;
+            this.cartReop = cartReop;
         }
         public IActionResult Login()
         {
@@ -53,19 +53,25 @@ namespace E_Commerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newUser = new ApplicationUser {
+                var newUser = new Customer {
                 
                     Email =model.Email,
                     UserName = model.Name,
                     PhoneNumber =model.Phone,
+                    City=model.City,
+                    Address=model.Address,
+                    
                     
 
-
                 };
-                IdentityResult result = await userManager.CreateAsync(newUser, model.Password);
+                 IdentityResult result = await userManager.CreateAsync(newUser, model.Password);
                 if (result.Succeeded)
                 {
-                   var roleResult = await userManager.AddToRoleAsync(newUser, "Admin");
+                    var cart = new Cart { Customer=newUser ,CustomerId=newUser.Id};
+                    await cartReop.AddAsync(cart);
+                    await cartReop.SaveAsync();
+                   var roleResult = await userManager.AddToRoleAsync(newUser, "admin");
+                    await userManager.AddToRoleAsync(newUser, "customer");
                     if (roleResult.Succeeded)
                     {
                         await signInManager.SignInAsync(newUser,false);

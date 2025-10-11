@@ -1,8 +1,7 @@
 ﻿@model Category
 
-<!-- Portfolio Section -->
 
-<section id="portfolio" class="portfolio section">
+<section id="portfolio" class="portfolio section ا">
 
     <!-- Section Title -->
 
@@ -13,7 +12,7 @@
             <form method="post" asp-action="ShowCategory" asp-controller="Category" enctype="multipart/form-data" class="search-bar">
                 <input name="id" type="number" value="@Model.Id" hidden />
                 <input name="input" type="search" placeholder="Search For Anything..." class="search-input" value="@ViewBag.searchValue" />
-                <button type="submit" class="search-button">Search</button>
+                <button type="submit" class="search-button" style="background-color:rgba(77, 44, 169, 0.9);">Search</button>
             </form>
 
         </section>
@@ -68,7 +67,7 @@
                 
                     <!-- End Portfolio Item -->
                 }
-                @if (this.User.IsInRole("Admin"))
+                @if (this.User.IsInRole("admin"))
                 {//when you add the role and identity do this 
 
 

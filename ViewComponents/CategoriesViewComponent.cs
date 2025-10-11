@@ -7,9 +7,9 @@ namespace E_Commerce.ViewComponents
 {
     public class CategoriesViewComponent:ViewComponent
     {
-        private readonly ICategoryRepo repository;
+        private readonly IGeneralRepo<Category,int> repository;
 
-        public CategoriesViewComponent(ICategoryRepo repository)
+        public CategoriesViewComponent(IGeneralRepo<Category, int> repository)
         {
             this.repository = repository;
         }
@@ -17,7 +17,7 @@ namespace E_Commerce.ViewComponents
         {
 
 
-            var categories = repository.GetAllًWithNameAndIdOnly();
+            var categories = repository.FindAll(x=>true,new string[] { }).Select(c=>new CategoryViewModel { Id=c.Id,Name=c.Name}).ToList();
             //    new List<Category> {
             //    new Category { Id=1,Name="Phones",Description="Buy New Phones"} ,
             //    new Category { Id=1,Name="TVs",Description="Buy New Phones"} ,

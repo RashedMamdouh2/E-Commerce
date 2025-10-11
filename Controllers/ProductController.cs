@@ -1,31 +1,43 @@
 ﻿using E_Commerce.Models;
 using E_Commerce.Repository;
 using E_Commerce.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductRepo repository;
+        private readonly IGeneralRepo<Feedback, int> feedbackRepo;
+        private readonly IGeneralRepo<Product,int> productrepo;
+        private readonly UserManager<Customer> userManager;
 
-        public ProductController(IProductRepo repository)
+        
+
+        public ProductController(IGeneralRepo<Feedback, int> feedbackRepo, IGeneralRepo<Product, int> productrepo,UserManager<Customer>userManager)
         {
-            this.repository = repository;
+            this.feedbackRepo = feedbackRepo;
+            this.productrepo = productrepo;
+            this.userManager = userManager;
+            
         }
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult ShowProduct(int id)
+        public async Task<IActionResult> ShowProductAsync(int id)
         {
-            var product = repository.GetById(id, true);
+            var product = await productrepo.FindAsync(p=>p.Id==id,new string[] { nameof(Product.Images),nameof(Product.Feedbacks),nameof(Product.Filters)});
             return View(product);
         }
-        public IActionResult AddProductReview(Feedback feedback)
+        [HttpPost]
+        public async Task<IActionResult> AddProductReviewAsync(Feedback feedback,string UserId)
         {
-            var repo = repository as ProductRepo;
-            repo.AddFeedback(feedback);
+            
+            feedback.CustomerId = User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier).Value;
+            await feedbackRepo.AddAsync(feedback);
+            await feedbackRepo.SaveAsync();
             return Content ("OK");
         }
    

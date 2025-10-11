@@ -1,6 +1,9 @@
-﻿@model Product
+﻿@using System.Security.Claims
+@model Product
 
-
+@{
+    var UserId = User.Identity.IsAuthenticated?User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value:"-1";
+}
 <!-- Page Title -->
 <div class="page-title accent-background">
     <div class="container position-relative">
@@ -76,7 +79,7 @@
                         </p>
                         <div>
                             <img src="~/ProductsImages/Default.jpg" class="testimonial-img" alt="">
-                            <h3>@feedback.Customer?.Name</h3>
+                            <h3>@feedback.Customer?.UserName</h3>
                            
                         </div>
                     </div>
@@ -121,18 +124,17 @@
 
 
             <div class="">
-                @*TODO: add the customer(logged in user id as customerId (forign key required) )
-
-                    Now I hardCoded it with any random value
-                *@
+          
                 <form asp-controller="Product" asp-action="AddProductReview"  method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                     <div class="row gy-4">
 
 
                         <div class="col-12">
+
                             <textarea class="form-control" name="Comment" rows="6" placeholder="Review" required=""></textarea>
                             <input type="hidden" name="ProductId" value="@Model.Id" />
-                            <input type="hidden" name="CustomerId" value="1" />
+                            <input type="hidden" name="UserId" value="@UserId" />
+                            
                         </div>
 
                         <div class="col-12 text-center">

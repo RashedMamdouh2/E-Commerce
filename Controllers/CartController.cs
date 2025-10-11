@@ -1,41 +1,67 @@
-﻿using Azure.Core.Serialization;
+﻿using Azure.Core;
+using Azure.Core.Serialization;
 using E_Commerce.Models;
 using E_Commerce.Repository;
+using E_Commerce.Services;
 using E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json.Nodes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace E_Commerce.Controllers
 {
     public class CartController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<Customer> userManager;
+        private readonly SignInManager<Customer> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ICustomerRepo customerManager;
-        private readonly IProductRepo productRepo;
-        private readonly ICartRepo cartRepo;
+        
+        private readonly IGeneralRepo<Product, int> productRepo;
+        private readonly IGeneralRepo<Cart, int> cartRepo;
+        private readonly IGeneralRepo<Customer, string> customerRepo;
+        private readonly IGeneralRepo<Coupon, int> couponRepo;
+        private readonly IGeneralRepo<Order, int> orderRepo;
+        private readonly IInventoryService inventory;
 
-        public CartController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, ICustomerRepo customerRepo, IProductRepo productRepo,ICartRepo cartRepo)
+        public CartController(
+            UserManager<Customer> userManager, 
+            SignInManager<Customer> signInManager, 
+            RoleManager<IdentityRole> roleManager, 
+            IGeneralRepo<Product, int> productRepo, 
+            IGeneralRepo<Cart, int> cartRepo, 
+            IGeneralRepo<Customer, string> customerRepo,
+            IGeneralRepo<Coupon,int> couponRepo,
+            IGeneralRepo<Order,int>orderRepo,
+            IInventoryService inventory
+            )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
-            this.customerManager = customerRepo;
+           
             this.productRepo = productRepo;
             this.cartRepo = cartRepo;
+            this.customerRepo = customerRepo;
+            this.couponRepo = couponRepo;
+            this.orderRepo = orderRepo;
+            this.inventory = inventory;
         }
 
-        public IActionResult ShowCart()
+        public async Task<IActionResult> ShowCartAsync()
         {
               var productsList = new List<int>();
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!.IsAuthenticated)
             {
-                string userId=User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier).Value;
-                productsList = customerManager.GetCustomerByUserId(userId).Cart.Products.Select(p=>p.Id).ToList();
+                string userId=User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier)!.Value;
+                var customer = await userManager.Users.Include(u => u.Cart).ThenInclude(c=>c!.Products).FirstOrDefaultAsync(u => u.Id == userId);
+                
+                productsList = customer?.Cart!.Products.Select(p=>p.Id).ToList();
 
             }
             else
@@ -51,7 +77,7 @@ namespace E_Commerce.Controllers
                
                 
             }
-            var products = productRepo.GetById(productsList, false)
+            var products =  productRepo.FindAll(p=>productsList.Contains(p.Id),new string[] { "Images"})
                      .Select(
                      p => new ProductInCartViewModel
                      {
@@ -59,22 +85,34 @@ namespace E_Commerce.Controllers
                          Name = p.Name,
                          Description = p.Description,
                          AvaliableInStock = p.Amount,
-                         Image = p.Images.FirstOrDefault(defaultValue: new Image { Url = "/ProductImages/Default.jpg" }).Url,
+                         Image = p.Images.FirstOrDefault(defaultValue: new Models.Image { Url = "/ProductImages/Default.jpg" }).Url,
                          OrderedQuantity = productsList.Count(x => x == p.Id),
                          Price = p.Price,
                      }).ToList();
             var cart = new CartViewModel { Products = products, TotalPrice = products.Sum(p => Math.Round(p.Price, 2)) };
             return View(cart);
         }
-        public IActionResult AddToCart(int id)//recives productId
+        public async Task<IActionResult> AddToCartAsync(int id)//recives productId
         {
             //DB
             if (User.Identity.IsAuthenticated)
             {
-                string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 
-                int cartId = customerManager.GetCustomerByUserId(userId).CartId;
-                cartRepo.AddProduct(cartId,productId: id);
+                string ?userId = userManager.GetUserId(User);
+                var customer = await userManager.Users.Include(u=>u.Cart).ThenInclude(cart=>cart.Products).FirstOrDefaultAsync(u=>u.Id==userId);
+                var product = await productRepo.GetByIdAsync(id);
+                if (customer?.Cart is null) {
+                    await cartRepo.AddAsync(new Cart { Customer=customer,CustomerId=userId,Products=new List<Product> { product} });
+                    await cartRepo.SaveAsync();
+                }
+                else
+                {
+                    var cart = customer?.Cart;
+                cart?.Products?.Add(product);
+                await cartRepo.SaveAsync();
+
+                }
+                
             }
             else
             {
@@ -100,11 +138,16 @@ namespace E_Commerce.Controllers
             return RedirectToAction("ShowCart");
 
         }
-        public IActionResult checkout(string cartItemsJson)
+ 
+        public async Task<IActionResult> ApplyCouponAsync(string couponCode)
         {
-
-            var products = System.Text.Json.JsonSerializer.Deserialize<List<Product>>(cartItemsJson);
-            return Content(cartItemsJson);
+           
+            var c =await couponRepo.FindAsync(c => c.Description == couponCode,new string[] { });
+            if (c != null) { 
+                return Ok("Ok");
+            }
+            return NotFound("");
         }
+       
     }
 }

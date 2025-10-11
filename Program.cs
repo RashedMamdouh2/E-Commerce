@@ -1,5 +1,6 @@
 using E_Commerce.Models;
 using E_Commerce.Repository;
+using E_Commerce.Services;
 using E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,19 +16,26 @@ namespace E_Commerce
             {
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("Commerce"));
             });
-            builder.Services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<CommerceDbContext>();
+            builder.Services.AddIdentity<Customer, IdentityRole>(options => 
+            {
+                options.Password.RequireNonAlphanumeric = false; 
+                options.Password.RequireLowercase = false; 
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<CommerceDbContext>();
             
             
             
             
             
 
-            builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
-            builder.Services.AddScoped<IProductRepo, ProductRepo>();
-            builder.Services.AddScoped<ICartRepo, CartRepository>();
-            builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
-            builder.Services.AddScoped<IImageRepo, ImageRepo>();
-            builder.Services.AddScoped<IMessageRepo, MessageRepo>();
+            builder.Services.AddScoped(typeof(IGeneralRepo<,>), typeof(GeneralRepo<,>)); 
+            builder.Services.AddScoped(typeof(IInventoryService), typeof(InventoryService)); 
+            //builder.Services.AddScoped<IProductRepo, ProductRepo>();
+            //builder.Services.AddScoped<ICartRepo, CartRepo>();
+            //builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+            //builder.Services.AddScoped<IImageRepo, ImageRepo>();
+            //builder.Services.AddScoped<IMessageRepo, MessageRepo>();
 
 
             // Add services to the container.
@@ -45,14 +53,13 @@ namespace E_Commerce
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
             app.UseAuthentication();//chekc have cookie?
             app.UseAuthorization();//check role access
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            //app.MapControllerRoute(name: "RouteName", pattern: "R/{id:int}/{name:alpha=rashed}", new { controller = "Test", Action = "act1" });
+            //app.MapControllerRoute(name: "RouteName2", pattern: "R/{controller}/{action}");
+            app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

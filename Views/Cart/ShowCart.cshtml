@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "ShowCart";
 }
-<div id="login" class="hero section accent-background py-5">
+<section id="hero" class="hero section accent-background">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 shadow-lg p-4 rounded bg-white">
@@ -27,7 +27,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title fw-bold">@product.Name</h5>
                                         <p class="card-text text-muted">@product.Description</p>
-                                        <p class="text-success fw-bold">Price: <span id="price-@product.Id">@product.Price</span> $</p>
+                                        <p class="text-success fw-bold">Price: <span id="price-@product.Id">@product.Price</span>ج.م </p>
 
                                         <!-- الكمية -->
                                         <p class="fw-bold text-primary cart-item" data-id="@product.Id">
@@ -36,7 +36,7 @@
 
                                         <!-- التوتال -->
                                         <p class="fw-bold text-primary" >
-                                            Total: <span id="total-@product.Id">@product.Price</span> $
+                                            Total: <span id="total-@product.Id">@product.Price.ToString("C")</span> 
                                         </p>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="decreaseQty(@product.Id, @product.Price)">
                                            
@@ -61,15 +61,49 @@
                 }
 
                 <div class="d-flex justify-content-between align-items-center mt-4">
-                    <h4 class="fw-bold">Total: <span class="text-success" id="TotalInvoice">@Model.TotalPrice $</span></h4>
-                    <div>
-                        <form asp-action="checkout" id="form">
-                            <input hidden id="cartItemsJson" name="cartItemsJson" value="" />
-                        <button type="submit" class="btn btn-primary me-2" onclick="Cashout(@User.Identity.IsAuthenticated.ToString().ToLower())">Proceed To Checkout →</button>
-                        <a asp-action="ApplyCoupon" class="btn btn-outline-secondary">Apply Coupon</a>
+                    <h4 class="fw-bold">Total: <span class="text-success" id="TotalInvoice">@Model.TotalPrice</span></h4>
+                    <div class="container my-4">
+                        <form asp-action="CreateOrder"  asp-controller="Order" id="form" class="needs-validation" novalidate>
+                            <input type="hidden" id="CouponsToServer" name="AppliedCoupons" value="0" />
+                            <!-- بيانات العربة -->
+                            <input type="hidden" id="OrderProducts" name="OrderProducts" value="" />
 
+                            <!-- زرار الدفع -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <button type="submit"
+                                        class="btn btn-primary me-2"
+                                        onclick="Cashout()">
+                                    Proceed To Checkout →
+                                </button>
+                            </div>
+
+                           
+                            <div class="mb-3" style="max-width:420px;">
+                                <label for="coupon" class="form-label visually-hidden">Coupon</label>
+
+                                <div class="input-group">
+                                    <input id="coupon" name="coupon" type="text"
+                                           class="form-control form-control-sm text-uppercase"
+                                           placeholder="Add A Discount Coupon"
+                                           maxlength="12"
+                                           aria-label="Coupon code"
+                                           autocomplete="off"  />
+                                <!-- feedback messages -->
+                                <div class="invalid-feedback mt-1">
+                                    Invalid Coupon Code! Try Again.
+                                </div>
+                                <div class="valid-feedback mt-1">
+                                    Coupon has been applyed successfully!
+                                </div>
+                                    <button  id="applyCoupon" class="btn btn-sm btn-outline-primary" type="button" onclick="CheckCoupon()">
+                                        Apply
+                                    </button>
+                                </div>
+
+                            </div>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -86,7 +120,7 @@
                             <div class="card-body">
                                 <h5 class="card-title fw-bold">@product.Name</h5>
                                 <p class="card-text text-muted">@product.Description</p>
-                                <h6 class="fw-bold text-success">@product.Price $</h6>
+                                <h6 class="fw-bold text-success">@product.Price.ToString("C")</h6>
                             </div>
                         </div>
                     </div>
@@ -94,7 +128,9 @@
             </div>
         </div>
     </div>
-</div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 
       function increaseQty(productId, price, maxAmount) {
@@ -104,14 +140,17 @@
         let TotalInvoice = document.getElementById("TotalInvoice");
         let qty = parseInt(qtyElem.innerText);
         let Total = parseFloat(TotalInvoice.innerText);
-        
+        console.log(TotalInvoice.innerText);
         console.log(Total);
+        
         if (qty < maxAmount) {
             warningElem.innerText="";
             qty++;
             
             qtyElem.innerText = qty;
             totalElem.innerText = (qty * price);
+            @* console.log(Total); *@
+            @* console.log(price); *@
             TotalInvoice.innerText = (Total+price).toFixed(2);
 
         } else {
@@ -136,29 +175,55 @@
             
         } 
     }
-    function Cashout(isAuthenticated){
-    if(!isAuthenticated){
-
-            document.getElementById("form").addEventListener("submit", function (e) {
-        e.preventDefault(); // ده يمنع الفورم من الـ reload
-        window.location.href = '/Account/Login';
-        console.log("Login First!");
-    });
-
-    }
+    function Cashout(){
+   
     let cartItems = [];
     document.querySelectorAll(".cart-item").forEach(item => {
         let productId = item.getAttribute("data-id");
         let quantity = document.getElementById("qty-" + productId).innerText;
+        let price = document.getElementById("price-" + productId).innerText;
 
         cartItems.push({
-           Id: parseInt(productId),
-            Amount: parseInt(quantity)
+           ProductId: parseInt(productId),
+            Quantity: parseInt(quantity),
+            Price:price
         });
     });
 
     // نحط الـ JSON في الـ hidden input
-    document.getElementById("cartItemsJson").value = JSON.stringify(cartItems);
+    document.getElementById("OrderProducts").value = JSON.stringify(cartItems);
+    document.getElementById("form").submit();
     }
+    function CheckCoupon(){
+    
+        var couponInputField =document.getElementById("coupon");
+        var couponCode = couponInputField.value;
+        
+        var CouponsToServer = document.getElementById("CouponsToServer");
+            $.ajax({
+        url: '/Cart/ApplyCoupon',   // الـ endpoint
+        type: 'POST',
+        data: {
+            
+            couponCode: couponCode
+        },
+        success: function (response) {
+            if(response=="Ok"){
 
+            couponInputField.classList.add("is-valid");
+            CouponsToServer.value+=',';
+            CouponsToServer.value+=couponCode;
+            if(CouponsToServer.value=='0')CouponsToServer.value=couponCode;
+
+            }
+            else{
+
+            couponInputField.classList.add("is-invalid");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("خطأ: ", error);
+        }
+    });
+    }
 </script>

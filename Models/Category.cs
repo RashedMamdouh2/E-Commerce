@@ -1,15 +1,16 @@
 ﻿namespace E_Commerce.Models
 {
-    public class Category
+    public class Category:IEntity<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
 
-        public List<FilterWord> Filters { get; set; } = new();
-        public List<Product> Products { get; set; }= new();
-        public List<Image>Images { get; set; }=new List<Image>();
+       
+        public List<Product> Products { get; set; } = new();
+        public Image Image { get; set; }
+        public List<Filter> Filters { get; set; } = new();
 
 
     }

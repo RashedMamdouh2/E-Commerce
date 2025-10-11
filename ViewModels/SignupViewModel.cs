@@ -11,6 +11,12 @@ namespace E_Commerce.ViewModels
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Text)]
+        public string City { get; set; }
+        [Required]
+        [DataType(DataType.Text)]
+        public string Address { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -18,6 +24,7 @@ namespace E_Commerce.ViewModels
         [Required]
         [DisplayName("Re-Enter Your Password")]
         [DataType(DataType.Password)]
+        [Compare(nameof(Password),ErrorMessage ="The Password doesn't match")]
         public string ConfirmPassword { get; set; }
         [Required]
         [DataType(DataType.PhoneNumber)]
