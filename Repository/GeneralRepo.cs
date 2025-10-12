@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Repository
 {
-    public class GeneralRepo<T,IdType> : IGeneralRepo<T,IdType> where T : class,IEntity<IdType>
+    public class GeneralRepo<T, IdType> : IGeneralRepo<T, IdType> where T : class, IEntity<IdType>
     {
         private readonly CommerceDbContext context;
 
@@ -21,7 +21,7 @@ namespace E_Commerce.Repository
             {
                 await context.AddAsync(obj);
 
-                
+
             }
             catch (Exception ex) {
 
@@ -29,7 +29,7 @@ namespace E_Commerce.Repository
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(ex.InnerException.Message);
                 return false;
-            
+
             }
             return true;
         }
@@ -38,9 +38,9 @@ namespace E_Commerce.Repository
         {
             try
             {
-                var obj =await this.GetByIdAsync(id);
+                var obj = await this.GetByIdAsync(id);
                 context.Set<T>().Remove(obj);
-            await SaveAsync();
+                await SaveAsync();
             }
             catch (Exception ex)
             {
@@ -64,7 +64,7 @@ namespace E_Commerce.Repository
             T res = null;
             try
             {
-                res= await context.Set<T>().FindAsync(id);
+                res = await context.Set<T>().FindAsync(id);
             }
             catch (Exception ex)
             {
@@ -72,10 +72,10 @@ namespace E_Commerce.Repository
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(ex.InnerException.Message);
-               
+
 
             }
-            
+
             return res;
         }
 
@@ -84,7 +84,7 @@ namespace E_Commerce.Repository
             List<T> res = null;
             try
             {
-                res = await context.Set<T>().Where(x=>ids.Contains(x.Id)).ToListAsync();
+                res = await context.Set<T>().Where(x => ids.Contains(x.Id)).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -100,7 +100,7 @@ namespace E_Commerce.Repository
         }
         public async Task<bool> UpdateAsync(T obj)
         {
-            
+
             try
             {
                 context.Update(obj);
@@ -139,34 +139,40 @@ namespace E_Commerce.Repository
 
         public async Task<T> FindAsync(Expression<Func<T, bool>> filter, string[] includes)
         {
-             Expression<Func<T,bool>> ex=filter;
-            
-            var query =  context.Set<T>().AsQueryable();
+            Expression<Func<T, bool>> ex = filter;
+
+            var query = context.Set<T>().AsQueryable();
             foreach (var include in includes)
             {
-                query= query.Include(include);
+                query = query.Include(include);
             }
             return await query.FirstOrDefaultAsync(ex);
         }
-        public  IEnumerable<T> FindAll(Expression<Func<T, bool>> filter, string[] includes,int take =-1,int skip=-1)
+        public IEnumerable<T> FindAll(Expression<Func<T, bool>> filter, string[] includes, int take = -1, int skip = -1)
         {
-           
-             Expression<Func<T,bool>> ex=filter;
-            
-            IQueryable<T> query =  context.Set<T>();
+
+            Expression<Func<T, bool>> ex = filter;
+
+            IQueryable<T> query = context.Set<T>();
             foreach (var include in includes)
             {
-               query= query.Include(include);
+                query = query.Include(include);
             }
-            var res= query.Where(ex);
-            if(take >= 0)
+            var res = query.Where(ex);
+            if (take >= 0)
             {
-               res = res.Take(take);
+                res = res.Take(take);
             }
-            if (skip >= 0) { 
+            if (skip >= 0) {
                 res = res.Skip(skip);
             }
             return res.AsEnumerable();
         }
+
+        public int Count(){
+            Console.WriteLine(context.Set<T>().Count().ToMetric());
+           return context.Set<T>().Count();
+           }
+        
     }
 }

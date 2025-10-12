@@ -7,16 +7,18 @@ namespace E_Commerce.Models
         public int Id { get; set; }
 
         [Range(0, int.MaxValue)]
-        public decimal InvoiceValue { get; set; }
+        public decimal TotalPriceBeforeDiscount { get; set; }
+        public decimal TotalPriceAfterDiscount { get; set; }
         public DateTime Date { get; set; }
         public OrderStatus Status { get; set; }
         public List<OrderProduct> Items { get; set; }
+        public List<Coupon> AppliedCoupons { get; set; }
         public string CustomerId { get; set; }
         public Customer Customer { get; set; }
     }
     public enum OrderStatus
     {
-        Delivered,Canceled,Shipped
+        Delivered,Canceled,Pending
     }
  
 }

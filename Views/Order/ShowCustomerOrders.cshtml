@@ -34,16 +34,16 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.InvoiceValue.ToString("C")</td>
+                            <td>@item.TotalPriceBeforeDiscount.ToString("C")</td>
                             <td>@item.Date.ToString("yyyy-MM-dd")</td>
                             <td>
-                                <span class="badge bg-@(item.Status == OrderStatus.Delivered ? "success" : item.Status == OrderStatus.Shipped ? "warning text-dark" : "secondary")">
+                                <span class="badge bg-@(item.Status == OrderStatus.Delivered ? "success" : item.Status == OrderStatus.Delivered ? "warning text-dark" : "secondary")">
                                     @item.Status.ToString()
                                 </span>
                             </td>
                             
                             <td>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2">
+                                <a asp-action="Details" asp-route-id="@item.Id" ,asp-route-view="Customer" class="btn btn-sm btn-outline-primary me-2">
                                     <i class="bi bi-info-circle"></i> Details
                                 </a>
                                 <a asp-action="ChangeStatus" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">

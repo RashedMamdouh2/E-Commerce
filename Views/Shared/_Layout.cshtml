@@ -53,10 +53,7 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a asp-action="Index" asp-controller="Home" asp-fragment="hero" class="active">Home</a></li>
-           @if(User.IsInRole("admin")){ 
-
-                    <li><a asp-action="ShowAllProducts" asp-controller="Admin">Manage Products</a></li>
-           } 
+           
            <li class="dropdown">
               <a asp-action="Index" asp-controller="Home" asp-fragment="services"><span>Categories</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               @await Component.InvokeAsync("Categories")
@@ -105,10 +102,11 @@
 
        
         @RenderBody()
-        @if (ViewData["Title"] != "Login"&& ViewData["Title"] != "Signup")
+        @if (ViewData["Title"] != "Login" && ViewData["Title"] != "Signup")
         {
             <!-- About Section -->
-            <section id="about" class="about section">
+            @if (ViewData["Title"] == "Home" || ViewData["Title"] == "About"){
+                <section id="about" class="about section">
 
                 <div class="container">
 
@@ -119,17 +117,16 @@
                         </div>
 
                         <div class="col-lg-6 order-2 order-lg-1 content" data-aos="fade-up" data-aos-delay="200">
-                            <h3>Voluptatem dignissimos provident quasi corporis</h3>
+                                <h3>Discover. Shop. Enjoy — all in one seamless experience</h3>
                             <p class="fst-italic">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                magna aliqua.
+                                    Cartify is a modern eCommerce platform that simplifies online shopping through smart product organization and smooth order management.
                             </p>
                             <ul>
-                                <li><i class="bi bi-check-circle"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
-                                <li><i class="bi bi-check-circle"></i> <span>Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
-                                <li><i class="bi bi-check-circle"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</span></li>
+                                    <li><i class="bi bi-check-circle"></i> <span>Easily place, track, and manage your orders in real time.</span></li>
+                                    <li><i class="bi bi-check-circle"></i> <span>We care about every customer, ensuring secure payments, fast delivery, and responsive support.</span></li>
+                                    <li><i class="bi bi-check-circle"></i> <span>Our mission is to blend technology and convenience — turning online shopping into a smooth, personalized experience.</span></li>
                             </ul>
-                            <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+                            <a href="#" class="read-more" ><span>Read More</span><i class="bi bi-arrow-right"></i></a>
                         </div>
 
                     </div>
@@ -137,10 +134,13 @@
                 </div>
 
             </section>
-
+            }
             <!-- /About Section -->
             <!-- Stats Section -->
-            @* <section id="stats" class="stats section accent-background">
+            @if (ViewData["Title"] == "Home" || ViewData["Title"] == "About")
+            {
+                
+             <section id="stats" class="stats section accent-background">
 
                 <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
 
@@ -148,22 +148,22 @@
 
                         <div class="col-lg-3 col-md-6">
                             <div class="stats-item text-center w-100 h-100">
-                                <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-                                <p>Clients</p>
+                                <span data-purecounter-start="0" data-purecounter-end="@ViewBag.CustomersNumber" data-purecounter-duration="1" class="purecounter"></span>
+                                    <p>Customers</p>
                             </div>
                         </div><!-- End Stats Item -->
 
                         <div class="col-lg-3 col-md-6">
                             <div class="stats-item text-center w-100 h-100">
-                                <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                                <p>Projects</p>
+                                    <span data-purecounter-start="0" data-purecounter-end="@ViewBag.OrdersNumber" data-purecounter-duration="1" class="purecounter"></span>
+                                <p>Orders</p>
                             </div>
                         </div><!-- End Stats Item -->
 
                         <div class="col-lg-3 col-md-6">
                             <div class="stats-item text-center w-100 h-100">
-                                <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
-                                <p>Hours Of Support</p>
+                                    <span data-purecounter-start="0" data-purecounter-end="@ViewBag.ProductssNumber" data-purecounter-duration="1" class="purecounter"></span>
+                                <p>Products</p>
                             </div>
                         </div><!-- End Stats Item -->
 
@@ -179,7 +179,8 @@
                 </div>
 
             </section>
-
+            }
+            @*
             <!-- /Stats Section -->
             <!-- Services Section -->
             <!-- Features Section -->
@@ -410,6 +411,9 @@
 
             <!-- /Team Section -->
             <!-- Contact Section -->
+            @if (ViewData["Title"] == "Home" || ViewData["Title"] == "About")
+            {
+                
             <section id="contact" class="contact section">
 
                 <!-- Section Title -->
@@ -462,7 +466,7 @@
                                         <a href="https://wa.me/201027069476?text=Hello%20there!" target="_blank">
                                             <i class="bi bi-whatsapp"></i>
                                         </a>
-                                        <h3>Send Whats App Mess</h3>
+                                        <h3>Send WhatsApp Message</h3>
                                     </div>
                                 </div><!-- End Info Item -->
 
@@ -508,12 +512,13 @@
                 </div>
 
             </section>
+            }
 
             <!-- /Contact Section -->
         }
 
     </main>
-    @if (ViewData["Title"] != "Login" && ViewData["Title"] != "Signup")
+    @if (ViewData["Title"] == "Home" || ViewData["Title"] == "About")
     {
         <footer id="footer" class="footer accent-background">
 
@@ -523,7 +528,10 @@
                         <a href="index.html" class="logo d-flex align-items-center">
                             <span class="sitename">Cartify</span>
                         </a>
-                        <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+                        <p>
+                            Modern eCommerce platform that simplifies online shopping through smart product organization and smooth order management.
+                            We combine technology and convenience to deliver a fast, secure, and personalized shopping experience for every customer
+                        </p>
                         <div class="social-links d-flex mt-4">
                             <a href=""><i class="bi bi-twitter-x"></i></a>
                             <a href=""><i class="bi bi-facebook"></i></a>

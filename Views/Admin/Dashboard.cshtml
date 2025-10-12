@@ -1,7 +1,153 @@
-﻿
-@{
-    ViewData["Title"] = "Dashboard";
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = null;
 }
 
-<h1>Dashboard</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            background-color: #212529;
+            color: white;
+        }
+
+            .sidebar a {
+                text-decoration: none;
+                color: #adb5bd;
+                display: block;
+                padding: 12px 20px;
+                border-radius: 5px;
+                margin: 5px 10px;
+            }
+
+                .sidebar a:hover, .sidebar a.active {
+                    background-color: #495057;
+                    color: white;
+                }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .navbar-custom {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .card {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .card:hover {
+                transform: scale(1.02);
+                box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column p-3">
+        <h4 class="text-center mb-4"><i class="bi bi-speedometer2"></i> Admin Panel</h4>
+        <a asp-action="" asp-controller="" class="active"><i class="bi bi-list"></i> Dashboard</a>
+        <a asp-action="" asp-controller=""><i class="bi bi-tags"></i> Manage Categories</a>
+        <a asp-action="ShowAllProducts" asp-controller="Admin"><i class="bi bi-box"></i> Manage Products</a>
+        <a asp-action="ShowOrders" asp-controller="Admin"><i class="bi bi-cart-check"></i> Show Orders</a>
+        <a asp-action="" asp-controller=""><i class="bi bi-people"></i> Show Customers</a>
+        <a asp-action="" asp-controller=""><i class="bi bi-person-gear"></i> Assign Admins</a>
+        <a asp-action="" asp-controller=""><i class="bi bi-bar-chart-line"></i> Reports</a>
+        <a asp-action="Index" asp-controller="Home"><i class="bi bi-arrow-left"></i> Back To Home</a>
+        <a asp-action="Signout" asp-controller="Account" class="mt-auto text-danger"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <nav class="navbar navbar-custom mb-4 p-3 rounded">
+            <div class="container-fluid d-flex justify-content-between">
+                <h5 class="mb-0 text-light">Welcome, @User?.Identity?.Name 👋</h5>
+                <button class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-tags display-5 text-primary mb-2"></i>
+                        <h5>Manage Categories</h5>
+                        <p class="text-muted">Add, edit, or delete product categories.</p>
+                        <a href="#" class="btn btn-primary btn-sm">Go</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-box display-5 text-success mb-2"></i>
+                        <h5>Manage Products</h5>
+                        <p class="text-muted">View, add, or update products.</p>
+                        <a asp-action="ShowAllProducts" asp-controller="Admin" class="btn btn-success btn-sm">Go</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-cart-check display-5 text-warning mb-2"></i>
+                        <h5>Show Orders</h5>
+                        <p class="text-muted">Track and manage customer orders.</p>
+                        <a asp-action="ShowOrders" asp-controller="Admin" class="btn btn-warning btn-sm">Go</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-people display-5 text-info mb-2"></i>
+                        <h5>Show Customers</h5>
+                        <p class="text-muted">View all registered customers.</p>
+                        <a href="#" class="btn btn-info btn-sm">Go</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-person-gear display-5 text-danger mb-2"></i>
+                        <h5>Assign Admins</h5>
+                        <p class="text-muted">Promote or manage admin roles.</p>
+                        <a href="#" class="btn btn-danger btn-sm">Go</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <i class="bi bi-bar-chart-line display-5 text-secondary mb-2"></i>
+                        <h5>Reports</h5>
+                        <p class="text-muted">View sales and performance reports.</p>
+                        <a href="#" class="btn btn-secondary btn-sm">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

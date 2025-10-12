@@ -13,7 +13,7 @@ namespace E_Commerce.Repository
         public Task<bool> DeleteByIdAsync(IdType id);
         public  Task<T> FindAsync(Expression<Func<T,bool>>filter,string[] includes);
         public IEnumerable<T> FindAll(Expression<Func<T, bool>> filter, string[] includes,int take =-1 ,int skip=-1);
-
+        public int Count();
 
         public Task<bool> SaveAsync();
 

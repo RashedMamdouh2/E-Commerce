@@ -37,7 +37,7 @@
                 </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
-            <div id="filters-container"></div>
+            <div id="filters-container" ></div>
 
             <!-- هنخزن الفلترز المختارة هنا عشان تتبعت مع الفورم -->
             <input type="hidden" id="SelectedFilters" name="SelectedFilters" />
@@ -149,7 +149,7 @@
                     div.innerHTML = `
                         <label>
                             <input type="checkbox" value="${f.id}"
-                                   onchange="UpdateSelectedFilters()"/> ${f.name}
+                                   onchange="UpdateSelectedFilters()"/> <span style="color:rgba(0, 0, 0, 0.9);">${f.name}<span>
                         </label>`;
                     container.appendChild(div);
                 });

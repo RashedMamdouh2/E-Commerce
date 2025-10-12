@@ -15,13 +15,17 @@ namespace E_Commerce.Controllers
         private readonly IGeneralRepo<Category, int> categoryRepo;
         private readonly IGeneralRepo<Message, int> messagesRepo;
         private readonly IGeneralRepo<Product, int> productRepo;
+        private readonly IGeneralRepo<Customer, string> customerRepo;
+        private readonly IGeneralRepo<Order, int> orderRepo;
 
-        public HomeController(ILogger<HomeController> logger, IGeneralRepo<Category, int> categoryRepo, IGeneralRepo<Message, int> messagesRepo, IGeneralRepo<Product, int> productRepo)
+        public HomeController(ILogger<HomeController> logger, IGeneralRepo<Category, int> categoryRepo, IGeneralRepo<Message, int> messagesRepo, IGeneralRepo<Product, int> productRepo, IGeneralRepo<Customer, string> customerRepo, IGeneralRepo<Order, int> orderRepo)
         {
             _logger = logger;
             this.categoryRepo = categoryRepo;
             this.messagesRepo = messagesRepo;
             this.productRepo = productRepo;
+            this.customerRepo = customerRepo;
+            this.orderRepo = orderRepo;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -36,7 +40,9 @@ namespace E_Commerce.Controllers
                 NewItems = newProducts.ToList()
 
             };
-
+            ViewBag.CustomersNumber = customerRepo.Count();
+            ViewBag.OrdersNumber = orderRepo.Count();
+            ViewBag.ProductssNumber = productRepo.Count();
             return View(model);
         }
         

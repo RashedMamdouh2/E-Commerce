@@ -23,14 +23,15 @@ namespace E_Commerce
                 options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<CommerceDbContext>();
-            
+           
             
             
             
             
 
             builder.Services.AddScoped(typeof(IGeneralRepo<,>), typeof(GeneralRepo<,>)); 
-            builder.Services.AddScoped(typeof(IInventoryService), typeof(InventoryService)); 
+            builder.Services.AddScoped(typeof(IInventoryService), typeof(InventoryService));
+            builder.Services.AddHttpClient<IPaymobService, PaymobService>();
             //builder.Services.AddScoped<IProductRepo, ProductRepo>();
             //builder.Services.AddScoped<ICartRepo, CartRepo>();
             //builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();

@@ -15,9 +15,11 @@ namespace E_Commerce.ViewModels
         public string Name { get; set; }
         [DisplayName("Category")]
         public int CategoryId {  get; set; }
+        public string? CategoryName {  get; set; }
         public string Description { get; set; }
         public List<Filter>? Filters { get; set; } = new();
         public List<IFormFile>? Images { get; set; }= new List<IFormFile>();
+        public string? ImagePath { get; set; }
         public List<Category>? ShowCategoriesList { get; set; } = new();
 
     }

@@ -1,4 +1,7 @@
 ﻿@model HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
 <!-- Hero Section -->
 <section id="hero" class="hero section accent-background">
     <div class="container">
@@ -144,7 +147,7 @@
                             <p style="height:250px;">
                                 <i class=" bi bi-quote quote-icon-left"></i>
                                 <span>@message.Content</span>
-                                <i class="bi bi-quote quote-icon-right"></i>
+                                <i class="bi bi-quote quote-icon-right "></i>
                             </p>
                             <img src="~/ProductsImages/Default.jpg" class="testimonial-img" alt="">
                             <h3>@message.Name</h3>

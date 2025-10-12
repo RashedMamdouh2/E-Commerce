@@ -72,7 +72,7 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> ShowAllProducts()
         {
             List<Product>all=await productRepo.GetAllAsync();
-            var categories = categoryRepo.FindAll(c => true, new string[] { }).Select(c => new { Id=c.Id,Name=c.Name}).ToList();
+            var categories = categoryRepo.FindAll(c => true, new string[] { }).Select(c => new CategoryViewModel { Id=c.Id,Name=c.Name}).ToList();
             ViewBag.categories = categories;
             return View(all);
         }
@@ -127,6 +127,7 @@ namespace E_Commerce.Controllers
         public IActionResult ShowOrders()
         {
             List<Order> orders =  orderRepo.FindAll(order=>true,new string[] {nameof(Customer)}).ToList();
+       
             return View(orders);
         }
         public IActionResult Dashboard()

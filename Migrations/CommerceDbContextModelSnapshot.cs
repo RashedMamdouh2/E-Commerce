@@ -39,8 +39,8 @@ namespace E_Commerce.Migrations
 
             modelBuilder.Entity("CouponCustomer", b =>
                 {
-                    b.Property<string>("CouponsId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CouponsId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CustomersId")
                         .HasColumnType("nvarchar(450)");
@@ -95,10 +95,20 @@ namespace E_Commerce.Migrations
 
             modelBuilder.Entity("E_Commerce.Models.Coupon", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Value")
@@ -107,6 +117,8 @@ namespace E_Commerce.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("coupons");
                 });
@@ -331,11 +343,14 @@ namespace E_Commerce.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("InvoiceValue")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPriceAfterDiscount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalPriceBeforeDiscount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -592,6 +607,10 @@ namespace E_Commerce.Migrations
                         .WithMany("Coupons")
                         .HasForeignKey("CartId");
 
+                    b.HasOne("E_Commerce.Models.Order", null)
+                        .WithMany("AppliedCoupons")
+                        .HasForeignKey("OrderId");
+
                     b.Navigation("Cart");
                 });
 
@@ -798,6 +817,8 @@ namespace E_Commerce.Migrations
 
             modelBuilder.Entity("E_Commerce.Models.Order", b =>
                 {
+                    b.Navigation("AppliedCoupons");
+
                     b.Navigation("Items");
                 });
 
