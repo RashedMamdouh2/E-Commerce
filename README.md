@@ -8,9 +8,13 @@ It provides a full shopping experience with product management, cart handling, a
 ---
 ## 🎥 Demo
 
-<a href="https://www.youtube.com/watch?v=lbT01bu-pvY" target="_blank" rel="noopener noreferrer">
-  <img src="vid.png" alt="Watch the demo" style="width:100%;max-width:600px;border-radius:10px;">
-</a>
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=lbT01bu-pvY" target="_blank" rel="noopener noreferrer">
+    <img src="vid.png" 
+         alt="Watch the demo" width="720"/>
+  </a>
+</p>
+
 
 
 
