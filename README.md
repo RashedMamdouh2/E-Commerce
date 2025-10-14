@@ -6,8 +6,11 @@ Cartify is a modern E-Commerce web application built with **ASP.NET Core MVC**, 
 It provides a full shopping experience with product management, cart handling, and customer feedback system.
 
 ---
-## Demo
-[![Watch the demo](https://img.youtube.com/vi/lbT01bu-pvY/0.jpg)](https://www.youtube.com/watch?v=lbT01bu-pvY)
+## 🎥 Demo
+
+[![▶️ Watch the demo](vid.png)](https://www.youtube.com/watch?v=lbT01bu-pvY)
+
+
 ## 🚀 Features
 
 - **Authentication & Authorization**  
