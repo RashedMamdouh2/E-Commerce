@@ -32,7 +32,7 @@ namespace E_Commerce.Controllers
         {
             var categories =  categoryRepo.FindAll(c=>true,new string[] { nameof(Category.Image)}).ToList();  
             var messages = await messagesRepo.GetAllAsync();
-            var newProducts =   (await   productRepo.GetAllAsync()).OrderByDescending(p=>p.InsertionDate).Take(3);
+            var newProducts =   ( productRepo.FindAll(p=>true,new string[] { nameof(Product.Images)})).OrderByDescending(p=>p.InsertionDate).Take(3);
             var model = new HomeViewModel
             {
                 Categories = categories,

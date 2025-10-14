@@ -1,14 +1,15 @@
 ﻿@using System.Security.Claims
-@model Product
+@model ProductViewModel
 
 @{
-    var UserId = User.Identity.IsAuthenticated?User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value:"-1";
+    var UserId = User.Identity.IsAuthenticated ? User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value : "-1";
 }
+
 <!-- Page Title -->
 <div class="page-title accent-background">
-    <div class="container position-relative">
-        <h1>@Model.Name</h1>
-        <p>@Model.Description</p>
+    <div class="container position-relative text-center">
+        <h1 class="fw-bold">@Model.Name</h1>
+        <p class="text-muted">@Model.Description</p>
         <nav class="breadcrumbs">
             <ol>
                 <li><a asp-action="Index" asp-controller="Home">Home</a></li>
@@ -16,166 +17,159 @@
             </ol>
         </nav>
     </div>
-</div><!-- End Page Title -->
-<!-- Portfolio Details Section -->
-<section id="portfolio-details" class="portfolio-details section">
+</div>
+<!-- End Page Title -->
 
+<section id="portfolio-details" class="portfolio-details section">
     <div class="container" data-aos="fade-up">
 
-        <div class="portfolio-details-slider swiper init-swiper">
-            <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "speed": 600,
-                  "autoplay": {
-                    "delay": 5000
-                  },
-                  "slidesPerView": "auto",
-                  "navigation": {
-                    "nextEl": ".swiper-button-next",
-                    "prevEl": ".swiper-button-prev"
-                  },
-                  "pagination": {
-                    "el": ".swiper-pagination",
-                    "type": "bullets",
-                    "clickable": true
-                  }
-                }
-            </script>
-            <div class="swiper-wrapper align-items-center">
+        <div class="row gy-5 justify-content-center align-items-start">
 
-                @foreach (var img in Model.Images)
-                {
-                    <div class="swiper-slide">
-                        <img src="@img.Url" alt="">
+            <!-- Product Images -->
+            <div class="col-lg-6">
+                <div class="portfolio-details-slider swiper init-swiper shadow-sm p-2 bg-light rounded-4">
+                    <script type="application/json" class="swiper-config">
+                        {
+                          "loop": true,
+                          "speed": 600,
+                          "autoplay": { "delay": 2000 },
+                          "slidesPerView": "auto",
+                          "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" },
+                          "pagination": { "el": ".swiper-pagination", "type": "bullets", "clickable": true }
+                        }
+                    </script>
+
+                    <div class="swiper-wrapper align-items-center">
+                        @foreach (var img in Model.Images)
+                        {
+                            <div class="swiper-slide">
+                                <img src="@img.Url" alt="@Model.Name" class="img-fluid rounded-3 shadow-sm">
+                            </div>
+                        }
                     </div>
-                }
 
-
-
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
             </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-pagination"></div>
+
+            <!-- Product Info -->
+            <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
+                <div class="portfolio-info p-4 bg-white rounded-4 shadow-sm">
+                    <h3 class="mb-3 fw-bold">Product Information</h3>
+                    <ul class="list-unstyled mb-4">
+                        <li><strong>Price:</strong> <span class="text-success fs-5 fw-bold">@Model.Price EGP</span></li>
+                        <li><strong>Category:</strong> @Model.CategoryName</li>
+                        <li><strong>In Stock:</strong> @Model.Amount</li>
+                    </ul>
+                    <div class="d-grid gap-2">
+                        <a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="btn btn-visit w-100">🛒 Add To Cart</a>
+                        @* <a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="btn btn-dark w-100">💳 Buy Now</a> *@
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <div class="row justify-content-between gy-4 mt-4">
+        <!-- Description + Reviews -->
+        <div class="row mt-5">
+            <div class="col-lg-10 mx-auto portfolio-description">
+                <h2 class="mb-3 fw-bold">@Model.Name Description</h2>
+                <p class="text-muted">@Model.Description</p>
 
-            <div class="col-lg-8" data-aos="fade-up">
-                <div class="portfolio-description">
-                    <h2>@Model.Name's Description</h2>
-                    <p>
-                        @Model.Description
-                    </p>
-                  
-                    <h2 style="margin-top:10%;">Product Reviews</h2>
-                    @foreach(var feedback in Model.Feedbacks){
+                <hr class="my-5" />
 
-                    <div style=" margin-bottom:10%;"class="testimonial-item">
-                        <p>
-                            <i class="bi bi-quote quote-icon-left"></i>
-                            <span>@feedback.Comment</span>
-                            <i class="bi bi-quote quote-icon-right"></i>
-                        </p>
-                        <div>
-                            <img src="~/ProductsImages/Default.jpg" class="testimonial-img" alt="">
-                            <h3>@feedback.Customer?.UserName</h3>
-                           
+                <h2 class="fw-bold mb-4">Product Reviews</h2>
+
+                @if (Model.Feedbacks?.Any() == true)
+                {
+                    @foreach (var feedback in Model.Feedbacks)
+                    {
+                        <div class="testimonial-item p-3 mb-4 border rounded-3 shadow-sm bg-light">
+                            <p class="fst-italic">
+                                <i class="bi bi-quote quote-icon-left text-primary"></i>
+                                <span>@feedback.Comment</span>
+                                <i class="bi bi-quote quote-icon-right text-primary"></i>
+                            </p>
+                            <div class="d-flex align-items-center mt-3">
+                                <img src="~/ProductsImages/Default.jpg" class="testimonial-img rounded-circle me-3" style="width:50px;height:50px;">
+                                <h6 class="mb-0">@feedback.Customer?.UserName</h6>
+                            </div>
                         </div>
-                    </div>
                     }
-
-                
-
-                </div>
+                }
+                else
+                {
+                    <p class="text-muted fst-italic">No reviews yet. Be the first to share your experience!</p>
+                }
             </div>
-
-            <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                <div class="portfolio-info">
-                    <h3>Product information</h3>
-                    <ul>
-                        <li><strong>Price</strong> @Model.Price</li>
-                        <li><strong>Category</strong> @Model.Category?.Name</li>
-                        <li><strong>In Stock</strong> @Model.Amount</li>
-                        <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id=@Model.Id class="btn-visit align-self-start">Add To Cart</a></li>
-                        <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id=@Model.Id class="btn btn-visit  align-self-start">Buy Now</a></li>
-                    </ul>
-                </div>
-            </div>
-
         </div>
 
     </div>
+</section>
 
-
-</section><!-- /Portfolio Details Section -->
+<!-- Add Review -->
 <section id="contact" class="contact section">
-
-    <!-- Section Title -->
-    <div class="container section-title" data-aos="fade-up">
+    <div class="container section-title text-center" data-aos="fade-up">
         <h2>New Review</h2>
-        <p>Share Your Experience!!</p>
-    </div><!-- End Section Title -->
+        <p>Share Your Experience!</p>
+    </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <form asp-controller="Product" asp-action="AddProductReview" method="post" class="php-email-form mx-auto" style="max-width:700px;">
+            <div class="row gy-4">
+                <div class="col-12">
+                    <textarea class="form-control rounded-3" name="Comment" rows="6" placeholder="Write your review..." required></textarea>
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                    <input type="hidden" name="UserId" value="@UserId" />
+                </div>
+                <div class="col-12 text-center">
+                    <div class="col-12 text-center">
+                        <div class="loading">Loading</div>
+                        <div class="error-message"></div>
+                        <div class="sent-message">Your Review has been sent. Thank you!</div>
 
-        <div class="row gy-4">
-
-
-
-            <div class="">
-          
-                <form asp-controller="Product" asp-action="AddProductReview"  method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-                    <div class="row gy-4">
-
-
-                        <div class="col-12">
-
-                            <textarea class="form-control" name="Comment" rows="6" placeholder="Review" required=""></textarea>
-                            <input type="hidden" name="ProductId" value="@Model.Id" />
-                            <input type="hidden" name="UserId" value="@UserId" />
-                            
-                        </div>
-
-                        <div class="col-12 text-center">
-                            <div class="loading">Loading</div>
-                            <div class="error-message"></div>
-                            <div class="sent-message">Your Review has been sent. Thank you!</div>
-
-                            <button type="submit">Add Review</button>
-                        </div>
-
+                        <button type="submit">Add Review</button>
                     </div>
-                </form>
-            </div><!-- End Contact Form -->
-
-        </div>
-
+                </div>
+            </div>
+        </form>
     </div>
+</section>
 
-</section><!-- /Contact Section -->
 <style>
     .portfolio-details-slider {
-        max-width: 400px; /* العرض */
-        margin: auto; /* يخليها في النص */
+        max-width: 100%;
+        margin: auto;
     }
 
         .portfolio-details-slider .swiper-slide img {
-            width: 100%; /* خلي الصورة تملأ المساحة */
-            height: auto; /* النسبة محفوظة */
-            border-radius: 10px; /* مظهر أحلى */
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            object-fit: cover;
         }
 
-        .portfolio-details-slider .swiper-button-next,
-        .portfolio-details-slider .swiper-button-prev {
-            transform: scale(0.7); /* صغر حجم الأسهم */
+    .swiper-button-next, .swiper-button-prev {
+        transform: scale(0.8);
+    }
+
+    .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+    }
+
+    .portfolio-info ul li {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .testimonial-item {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .testimonial-item:hover {
+            transform: translateY(-3px);
         }
-
-        .portfolio-details-slider .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
-        }
-
-  
-
 </style>

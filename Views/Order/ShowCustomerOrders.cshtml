@@ -1,68 +1,62 @@
-﻿
-@model IEnumerable<E_Commerce.Models.Order>
+﻿@model IEnumerable<E_Commerce.Models.Order>
+
 @{
-    ViewData["Title"] = "ShowCustomerOrders";
+    ViewData["Title"] = "Orders List";
 }
 
 
 
-
-
-<!-- Bootstrap 5 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-<!-- DataTables Bootstrap 5 -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
 <section id="hero" class="hero section accent-background">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="color: #fff;">Orders List</h2>
+            <p class="text-muted">Manage and review all customer orders below.</p>
+        </div>
 
-<div class="container gy-4">
-  
-
-    <div class="card shadow-sm rounded-4 border-0">
-        <div class="card-body p-0">
-                
-            <table id="ordersTable" class="table table-hover table-striped align-middle mb-0">
-                <thead class="table-primary text-center">
-                    <tr>
-                        <th>Total Invoice</th>
-                        <th>Order Date</th>
-                        <th>Order Status</th>
-                        
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    @foreach (var item in Model)
-                    {
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-0">
+                <table id="ordersTable" class="table table-hover align-middle mb-0">
+                    <thead style="background-color: #5846f9; color: #fff;" class="text-center">
                         <tr>
-                            <td>@item.TotalPriceBeforeDiscount.ToString("C")</td>
-                            <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                            <td>
-                                <span class="badge bg-@(item.Status == OrderStatus.Delivered ? "success" : item.Status == OrderStatus.Delivered ? "warning text-dark" : "secondary")">
-                                    @item.Status.ToString()
-                                </span>
-                            </td>
+                            <th>Total Invoice</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
                             
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.Id" ,asp-route-view="Customer" class="btn btn-sm btn-outline-primary me-2">
-                                    <i class="bi bi-info-circle"></i> Details
-                                </a>
-                                <a asp-action="ChangeStatus" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
-                                    <i class="bi bi-arrow-repeat"></i> Cancel
-                                </a>
-                            </td>
+                            <th>Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-center">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold text-success">@item.TotalPriceBeforeDiscount.ToString("C")</td>
+                                <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="badge bg-@(item.Status == OrderStatus.Delivered ? "success" : item.Status == OrderStatus.Pending ? "warning text-dark" : "secondary")">
+                                        @item.Status.ToString()
+                                    </span>
+                                </td>
+                                
+                                <td>
+                                    <a asp-action="Details" asp-controller="Order" asp-route-id="@item.Id" asp-route-view="Customer"
+                                       class="btn btn-sm btn-outline-primary me-2">
+                                        <i class="bi bi-info-circle"></i> Details
+                                    </a>
+                                    <a asp-action="ChangeStatus" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-arrow-repeat"></i> Change Status
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 </section>
 
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-
-<!-- jQuery & DataTables -->
+<!-- DataTables -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
@@ -70,11 +64,11 @@
 <script>
     $(document).ready(function () {
         $('#ordersTable').DataTable({
-            "pageLength": 10,
+            "pageLength": 8,
             "lengthChange": false,
             "ordering": true,
             "language": {
-                "search": "Search orders:",
+                "search": "Search Orders:",
                 "paginate": {
                     "previous": "&laquo;",
                     "next": "&raquo;"
@@ -85,3 +79,35 @@
     });
 </script>
 
+<style>
+    #ordersTable tbody tr:hover {
+        background-color: #f9f7ff !important;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .dataTables_filter input {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 6px !important;
+        margin: 0 2px !important;
+        border: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #5846f9 !important;
+        color: white !important;
+    }
+
+    .dataTables_info {
+        color: #555;
+        margin-top: 10px;
+    }
+
+    .card {
+        overflow: hidden;
+    }
+</style>

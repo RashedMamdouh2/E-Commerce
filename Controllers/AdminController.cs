@@ -43,7 +43,7 @@ namespace E_Commerce.Controllers
         //[HttpPost]
         public async Task<IActionResult> SaveProduct(ProductViewModel model,string SelectedFilters="")
         {
-            var imagesList=GetImages(model.Images); 
+            var imagesList=GetImages(model.ImagesFile); 
             if (ModelState.IsValid) {
                 var product = new Product
                 {
@@ -108,6 +108,7 @@ namespace E_Commerce.Controllers
 
 
                await productRepo.UpdateAsync(product);
+                await productRepo.SaveAsync();
             return RedirectToAction(controllerName: "Admin", actionName: "ShowAllProducts");
             }
             return View("Edit",model);

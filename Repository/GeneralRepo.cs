@@ -145,7 +145,10 @@ namespace E_Commerce.Repository
             foreach (var include in includes)
             {
                 query = query.Include(include);
+                
+
             }
+            
             return await query.FirstOrDefaultAsync(ex);
         }
         public IEnumerable<T> FindAll(Expression<Func<T, bool>> filter, string[] includes, int take = -1, int skip = -1)

@@ -18,8 +18,11 @@ namespace E_Commerce.ViewModels
         public string? CategoryName {  get; set; }
         public string Description { get; set; }
         public List<Filter>? Filters { get; set; } = new();
-        public List<IFormFile>? Images { get; set; }= new List<IFormFile>();
-        public string? ImagePath { get; set; }
+        [DisplayName("Upload Product Images")]
+        public List<IFormFile>? ImagesFile { get; set; }= new List<IFormFile>();
+        public List<Feedback>? Feedbacks { get; set; }
+        public List<Image>? Images { get; set; }
+        public string? MainImagePath { get; set; }
         public List<Category>? ShowCategoriesList { get; set; } = new();
 
     }

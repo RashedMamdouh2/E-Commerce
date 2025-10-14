@@ -70,8 +70,8 @@ namespace E_Commerce.Controllers
                     var cart = new Cart { Customer=newUser ,CustomerId=newUser.Id};
                     await cartReop.AddAsync(cart);
                     await cartReop.SaveAsync();
-                   var roleResult = await userManager.AddToRoleAsync(newUser, "admin");
-                    await userManager.AddToRoleAsync(newUser, "customer");
+                   //var roleResult = await userManager.AddToRoleAsync(newUser, "admin");
+                    var roleResult =await userManager.AddToRoleAsync(newUser, "customer");
                     if (roleResult.Succeeded)
                     {
                         await signInManager.SignInAsync(newUser,false);

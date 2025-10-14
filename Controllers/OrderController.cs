@@ -82,7 +82,7 @@ namespace E_Commerce.Controllers
             var appliedCoupons = order.AppliedCoupons.Select(c => new CouponViewModel { Name = c.Description, Value = c.Value.ToString() });
             var itemsIds = order.Items.Select(p => p.ProductId);
             var products = productRepo.FindAll(p => itemsIds.Contains(p.Id), new string[] { nameof(Product.Category),nameof(Product.Images) });
-            var items = products.Zip(order.Items).Select((product) => new ProductViewModel {Id=product.First.Id,Amount=product.Second.Quantity,Price=product.Second.Price,CategoryName=product.First.Category.Name,Name=product.First.Name,ImagePath=product.First.Images.First().Url });
+            var items = products.Zip(order.Items).Select((product) => new ProductViewModel {Id=product.First.Id,Amount=product.Second.Quantity,Price=product.Second.Price,CategoryName=product.First.Category.Name,Name=product.First.Name,MainImagePath=product.First.Images.First().Url });
             var orderVM = new OrderViewModel { Id=order.Id,OrderDate=order.Date,Status=order.Status.ToString(),AppliedCoupons=appliedCoupons,Items=items,CustomerName=order.Customer.UserName!,CustomerEmail= order.Customer.Email!, CustomerPhoneNumber= order.Customer.PhoneNumber??"", InvoiceAfterCoupons = order.TotalPriceAfterDiscount,InvoiceBeforeCoupons=order.TotalPriceBeforeDiscount};
             if(view=="Admin")
                 return View("OrderDetailsAdminView", orderVM);

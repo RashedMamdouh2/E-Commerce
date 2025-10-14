@@ -77,8 +77,8 @@ namespace E_Commerce.Controllers
                
                 
             }
-            var products =  productRepo.FindAll(p=>productsList.Contains(p.Id),new string[] { "Images"})
-                     .Select(
+            var products = productRepo.FindAll(p => productsList.Contains(p.Id), new string[] { "Images" });
+            var productsCartViewModel=products .Select(
                      p => new ProductInCartViewModel
                      {
                          Id = p.Id,
@@ -87,9 +87,13 @@ namespace E_Commerce.Controllers
                          AvaliableInStock = p.Amount,
                          Image = p.Images.FirstOrDefault(defaultValue: new Models.Image { Url = "/ProductImages/Default.jpg" }).Url,
                          OrderedQuantity = productsList.Count(x => x == p.Id),
-                         Price = p.Price,
+                         Price = p.Price
+
                      }).ToList();
-            var cart = new CartViewModel { Products = products, TotalPrice = products.Sum(p => Math.Round(p.Price, 2)) };
+
+            var relatedCategoriesIDs = products.Select(p => p.CategoryId);
+            var relatedProducts = productRepo.FindAll(p =>productsList != null &&!productsList.Contains(p.Id)&& relatedCategoriesIDs.Contains(p.CategoryId),new string[] { nameof(Product.Images)},take:4);
+            var cart = new CartViewModel { Products = productsCartViewModel, TotalPrice = products.Sum(p => Math.Round(p.Price, 2)),RelatedProducts=relatedProducts.ToList() };
             return View(cart);
         }
         public async Task<IActionResult> AddToCartAsync(int id)//recives productId

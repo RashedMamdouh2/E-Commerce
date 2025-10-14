@@ -3,6 +3,7 @@ using E_Commerce.Repository;
 using E_Commerce.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace E_Commerce.Controllers
@@ -28,8 +29,21 @@ namespace E_Commerce.Controllers
         }
         public async Task<IActionResult> ShowProductAsync(int id)
         {
-            var product = await productrepo.FindAsync(p=>p.Id==id,new string[] { nameof(Product.Images),nameof(Product.Feedbacks),nameof(Product.Filters)});
-            return View(product);
+            var product = await productrepo.FindAsync(p=>p.Id==id,new string[] { nameof(Product.Images),nameof(Product.Filters), nameof(Product.Category) });
+            var feedbacks =  feedbackRepo.FindAll(f => f.ProductId == id, new string[] { nameof(Feedback.Customer) });
+            var productVM=new ProductViewModel
+            {
+                Id = product.Id,
+                Images = product.Images,
+                Feedbacks = feedbacks.ToList(),
+                Price = product.Price,
+                Amount = product.Amount,
+                Filters = product.Filters,
+                Description = product.Description,
+                Name = product.Name,
+                CategoryName = product.Category.Name
+            };
+            return View(productVM);
         }
         [HttpPost]
         public async Task<IActionResult> AddProductReviewAsync(Feedback feedback,string UserId)

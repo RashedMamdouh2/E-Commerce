@@ -48,10 +48,10 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="Images" class="control-label" style="color:#6f42c1;"></label>
-                <input asp-for="Images" type="file" class="form-control" multiple  id="imageInput" />
+                <label asp-for="ImagesFile" class="control-label" style="color:#6f42c1;"></label>
+                <input asp-for="ImagesFile" type="file" class="form-control" multiple  id="imageInput" />
                 <div id="previewContainer" class="d-flex flex-wrap mt-2"></div>
-                <span asp-validation-for="Images" class="text-danger"></span>
+                <span asp-validation-for="ImagesFile" class="text-danger"></span>
             </div>
 
             <div class="form-group text-center mt-4">
@@ -115,7 +115,7 @@
         e.preventDefault();
 
         const formData = new FormData(form);
-        allFiles.forEach(file => formData.append("Images", file));
+        allFiles.forEach(file => formData.append("ImagesFile", file));
 
         fetch(form.action, {
             method: "POST",
