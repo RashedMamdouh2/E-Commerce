@@ -1,6 +1,6 @@
 # 🛒 Cartify
 
-**Cartify — Shop it. Love it.**
+
 
 Cartify is a modern E-Commerce web application built with **ASP.NET Core MVC**, **Entity Framework Core**, and **Identity** for authentication & authorization.  
 It provides a full shopping experience with product management, cart handling, and customer feedback system.
